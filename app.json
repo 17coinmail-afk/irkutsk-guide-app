@@ -1,12 +1,13 @@
 {
   "expo": {
-    "name": "app",
-    "slug": "app",
+    "name": "Irkutsk Guide",
+    "slug": "irkutsk-guide",
     "scheme": "irkutskguide",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
+    "backgroundColor": "#0a0f16",
     "ios": {
       "supportsTablet": true
     },

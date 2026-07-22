@@ -6,13 +6,15 @@ import { useContent } from '../../src/content/ContentProvider'
 import { filterPlaces } from '../../src/lib/selectors'
 import { PlaceCard } from '../../src/components/PlaceCard'
 import { FilterChips } from '../../src/components/FilterChips'
+import OfflineFirstRun from '../offline-first-run'
 import { colors, space, font, radius } from '../../src/theme/tokens'
 
 export default function PlacesTab() {
-  const { pack, lang, t } = useContent()
+  const { pack, lang, t, offlineFirstRun } = useContent()
   const router = useRouter()
   const [section, setSection] = useState('all')
   const [query, setQuery] = useState('')
+  if (offlineFirstRun && !pack) return <OfflineFirstRun />
   const places = pack?.data.places ?? []
   const secOpts = [{ key: 'all', label: t('filterAll') }, { key: 'sights', label: t('secBaikal') }, { key: 'city', label: t('secCity') }]
   const list = useMemo(() => filterPlaces(places, { section: section === 'all' ? undefined : section, query, lang }), [places, section, query, lang])
