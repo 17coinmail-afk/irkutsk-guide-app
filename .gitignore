@@ -43,4 +43,5 @@ yarn-error.*
 # superpowers / служебное
 .superpowers/
 .build-report.md
+.uxcore-report.md
 
