@@ -35,13 +35,13 @@ jobs:
         run: |
           cd ios
           WS=$(ls -d *.xcworkspace | head -1)
-          SCHEME=$(xcodebuild -list -workspace "$WS" -json | python3 -c "import sys,json;print(json.load(sys.stdin)['workspace']['schemes'][0])")
+          SCHEME=$(basename *.xcodeproj .xcodeproj)   # схема приложения = имя .xcodeproj (IrkutskGuide), НЕ Pod-схема
           echo "Workspace=$WS  Scheme=$SCHEME"
           xcodebuild \
             -workspace "$WS" \
             -scheme "$SCHEME" \
             -configuration Release \
-            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
             -archivePath build/App.xcarchive \
             archive \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" PROVISIONING_PROFILE=""
