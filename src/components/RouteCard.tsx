@@ -3,6 +3,7 @@ import { Pressable, View, Text, StyleSheet } from 'react-native'
 import { colors, radius, space, font } from '../theme/tokens'
 import { useContent } from '../content/ContentProvider'
 import { dayWord } from '../lib/dayWord'
+import { FavHeart } from './FavHeart'
 import type { Route } from '../lib/contentTypes'
 export function RouteCard({ route, onPress }: { route: Route; onPress: () => void }) {
   const { lang } = useContent()
@@ -15,11 +16,13 @@ export function RouteCard({ route, onPress }: { route: Route; onPress: () => voi
         <Text style={s.desc} numberOfLines={2}>{tr.description}</Text>
         <Text style={s.stops}>{route.stops.length} · {route.theme}</Text>
       </View>
+      <FavHeart kind="route" slug={route.slug} style={s.heart} />
     </Pressable>
   )
 }
 const s = StyleSheet.create({
-  card: { flexDirection: 'row', backgroundColor: colors.surface, borderRadius: radius.md, marginBottom: space.md, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' },
+  card: { flexDirection: 'row', backgroundColor: colors.surface, borderRadius: radius.md, marginBottom: space.md, borderWidth: 1, borderColor: colors.border, overflow: 'hidden', position: 'relative' },
+  heart: { position: 'absolute', top: 8, right: 8 },
   badge: { width: 72, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surfaceAlt, gap: 2 },
   num: { color: colors.gold, fontSize: font.sizes.xl, fontWeight: '700' },
   unit: { color: colors.textMuted, fontSize: font.sizes.xs },

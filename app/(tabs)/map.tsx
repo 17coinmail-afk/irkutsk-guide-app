@@ -1,25 +1,48 @@
-import React from 'react'
-import { StyleSheet } from 'react-native'
-import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
+import React, { useRef, useMemo, useCallback } from 'react'
+import { View, Pressable, Text, StyleSheet } from 'react-native'
+import { WebView } from 'react-native-webview'
+import * as Location from 'expo-location'
 import { useRouter } from 'expo-router'
 import { useContent } from '../../src/content/ContentProvider'
-import { colors } from '../../src/theme/tokens'
+import { buildMapHtml, type MapPoint } from '../../src/map/leafletHtml'
+import { colors, radius, space, font } from '../../src/theme/tokens'
 
 export default function MapTab() {
-  const { pack, lang } = useContent()
+  const { pack, lang, t } = useContent()
   const router = useRouter()
-  const places = pack?.data.places ?? []
+  const ref = useRef<WebView>(null)
+
+  const html = useMemo(() => {
+    const points: MapPoint[] = (pack?.data.places ?? []).map((p) => ({
+      lng: p.lng, lat: p.lat, slug: p.slug, title: p.translations[lang].title, city: p.section === 'city',
+    }))
+    return buildMapHtml(points)
+  }, [pack, lang])
+
+  const onMessage = useCallback((e: { nativeEvent: { data: string } }) => {
+    const slug = e.nativeEvent.data
+    if (slug) router.push(`/place/${slug}`)
+  }, [router])
+
+  const locate = useCallback(async () => {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync()
+      if (status !== 'granted') return
+      const pos = await Location.getCurrentPositionAsync({})
+      ref.current?.injectJavaScript(`window.__locate(${pos.coords.latitude},${pos.coords.longitude});true;`)
+    } catch {}
+  }, [])
+
   return (
-    <MapView provider={PROVIDER_DEFAULT} style={s.map}
-      initialRegion={{ latitude: 52.6, longitude: 106.2, latitudeDelta: 3.5, longitudeDelta: 3.5 }}>
-      {places.map((p) => (
-        <Marker key={p.id} coordinate={{ latitude: p.lat, longitude: p.lng }}
-          pinColor={p.section === 'city' ? colors.gold : colors.turquoise}
-          title={p.translations[lang].title}
-          description={p.cuisine ?? p.category}
-          onCalloutPress={() => router.push(`/place/${p.slug}`)} />
-      ))}
-    </MapView>
+    <View style={s.wrap}>
+      <WebView ref={ref} originWhitelist={['*']} source={{ html }} style={s.map} onMessage={onMessage} javaScriptEnabled domStorageEnabled />
+      <Pressable style={s.locBtn} onPress={locate}><Text style={s.locTxt}>◎ {t('myLocation')}</Text></Pressable>
+    </View>
   )
 }
-const s = StyleSheet.create({ map: { flex: 1, backgroundColor: colors.bg } })
+const s = StyleSheet.create({
+  wrap: { flex: 1, backgroundColor: colors.bg },
+  map: { flex: 1, backgroundColor: colors.bg },
+  locBtn: { position: 'absolute', right: space.md, bottom: space.lg, backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: radius.pill, paddingHorizontal: space.md, paddingVertical: space.sm },
+  locTxt: { color: colors.turquoise, fontSize: font.sizes.sm, fontWeight: '700' },
+})

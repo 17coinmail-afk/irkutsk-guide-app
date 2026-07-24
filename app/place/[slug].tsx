@@ -3,6 +3,7 @@ import { View, Text, Pressable, ScrollView, StyleSheet, Linking } from 'react-na
 import { Image } from 'expo-image'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useContent } from '../../src/content/ContentProvider'
+import { FavHeart } from '../../src/components/FavHeart'
 import { colors, space, font, radius } from '../../src/theme/tokens'
 
 export default function PlaceDetail() {
@@ -15,7 +16,10 @@ export default function PlaceDetail() {
   const geo = `https://maps.google.com/?q=${place.lat},${place.lng}`
   return (
     <ScrollView style={s.wrap} contentContainerStyle={{ paddingBottom: space.xl }}>
-      {place.photoUrl && <Image source={place.photoUrl} style={s.img} contentFit="cover" />}
+      <View style={s.media}>
+        {place.photoUrl && <Image source={place.photoUrl} style={s.img} contentFit="cover" />}
+        <FavHeart kind="place" slug={place.slug} size={26} style={s.heart} />
+      </View>
       <View style={s.body}>
         <Text style={s.cat}>{place.cuisine ?? place.category}</Text>
         <Text style={s.title}>{tr.title}</Text>
@@ -33,6 +37,8 @@ export default function PlaceDetail() {
 }
 const s = StyleSheet.create({
   wrap: { flex: 1, backgroundColor: colors.bg },
+  media: { position: 'relative' },
+  heart: { position: 'absolute', top: 10, right: 10 },
   img: { width: '100%', height: 260, backgroundColor: colors.surfaceAlt },
   body: { padding: space.md, gap: space.sm },
   cat: { color: colors.turquoise, fontSize: font.sizes.xs, textTransform: 'uppercase', letterSpacing: 1 },
