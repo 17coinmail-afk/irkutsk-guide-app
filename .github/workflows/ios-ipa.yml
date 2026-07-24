@@ -39,7 +39,7 @@ jobs:
       - name: Patch expo-modules-jsi (Swift 6.2 неоднозначность <=)
         run: |
           F=node_modules/expo-modules-jsi/apple/Sources/ExpoModulesJSI/Coding/JavaScriptCodable+Date.swift
-          perl -pi -e 's/abs\(milliseconds\) <= maxJavaScriptDateMilliseconds/(abs(milliseconds) as Double) <= maxJavaScriptDateMilliseconds/' "$F"
+          perl -pi -e 's/abs\(milliseconds\) <= maxJavaScriptDateMilliseconds/milliseconds.magnitude <= maxJavaScriptDateMilliseconds/' "$F"
           echo "--- строка 53 после патча ---"
           sed -n '53p' "$F"
 
