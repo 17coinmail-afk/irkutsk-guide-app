@@ -1,8 +1,8 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native'
 import { WebView } from 'react-native-webview'
 import * as Location from 'expo-location'
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 import { useContent } from '../../src/content/ContentProvider'
 import { buildMapHtml, type MapPoint } from '../../src/map/leafletHtml'
@@ -11,6 +11,8 @@ import { colors, radius, space, font, fontFamily, shadow } from '../../src/theme
 export default function MapTab() {
   const { pack, lang, t } = useContent()
   const router = useRouter()
+  // Опциональный фокус, переданный из детали места («показать на карте»): /map?flat=..&flng=..
+  const { flat, flng } = useLocalSearchParams<{ flat?: string; flng?: string }>()
   const ref = useRef<WebView>(null)
   const [mapLoading, setMapLoading] = useState(true)
 
@@ -25,6 +27,13 @@ export default function MapTab() {
     const slug = e.nativeEvent.data
     if (slug) router.push(`/place/${slug}`)
   }, [router])
+
+  // Когда пришли из детали места с координатами — центрируем карту (глобальная переменная
+  // `map` в leafletHtml.ts доступна из инжектируемого JS, т.к. объявлена через var в скрипте страницы).
+  useEffect(() => {
+    if (mapLoading || !flat || !flng) return
+    ref.current?.injectJavaScript(`map.setView([${flat},${flng}],13);true;`)
+  }, [flat, flng, mapLoading])
 
   const locate = useCallback(async () => {
     try {
