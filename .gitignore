@@ -44,4 +44,5 @@ yarn-error.*
 .superpowers/
 .build-report.md
 .uxcore-report.md
+.redesign-report.md
 
