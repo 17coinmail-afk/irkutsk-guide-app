@@ -1,0 +1,58 @@
+name: iOS unsigned IPA
+
+# Собирает НЕподписанный .ipa на бесплатном macOS-раннере GitHub Actions.
+# Подпись делает Sideloadly/AltStore при установке на устройство (Apple ID пользователя).
+# Запуск: вкладка Actions → "iOS unsigned IPA" → Run workflow. Артефакт — внизу страницы прогона.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install JS deps
+        run: npm install --legacy-peer-deps --no-audit --no-fund
+
+      - name: Expo prebuild (iOS)
+        run: npx expo prebuild -p ios --no-install
+
+      - name: CocoaPods
+        run: cd ios && pod install
+
+      - name: Build unsigned archive
+        run: |
+          cd ios
+          WS=$(ls -d *.xcworkspace | head -1)
+          SCHEME=$(xcodebuild -list -workspace "$WS" -json | python3 -c "import sys,json;print(json.load(sys.stdin)['workspace']['schemes'][0])")
+          echo "Workspace=$WS  Scheme=$SCHEME"
+          xcodebuild \
+            -workspace "$WS" \
+            -scheme "$SCHEME" \
+            -configuration Release \
+            -sdk iphoneos \
+            -archivePath build/App.xcarchive \
+            archive \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" PROVISIONING_PROFILE=""
+
+      - name: Package unsigned IPA
+        run: |
+          cd ios
+          APP=$(ls -d build/App.xcarchive/Products/Applications/*.app | head -1)
+          echo "App bundle: $APP"
+          mkdir -p Payload
+          cp -R "$APP" Payload/
+          zip -qry irkutsk-unsigned.ipa Payload
+          ls -la irkutsk-unsigned.ipa
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: irkutsk-ios-ipa
+          path: ios/irkutsk-unsigned.ipa
+          if-no-files-found: error

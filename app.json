@@ -9,6 +9,7 @@
     "userInterfaceStyle": "dark",
     "backgroundColor": "#0a0f16",
     "ios": {
+      "bundleIdentifier": "ru.getastrodaily.irkutsk",
       "supportsTablet": true
     },
     "android": {
