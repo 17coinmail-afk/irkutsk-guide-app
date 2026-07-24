@@ -13,10 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Select Xcode 16+
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: latest-stable
+      - name: Select Xcode 16.x (RN 0.86 несовместим с Xcode 26)
+        run: |
+          echo "Доступные Xcode:"; ls -d /Applications/Xcode*.app
+          XC=$(ls -d /Applications/Xcode_16*.app 2>/dev/null | sort -V | tail -1)
+          if [ -z "$XC" ]; then echo "Xcode 16.x не найден!"; exit 1; fi
+          echo "Выбираю $XC"
+          sudo xcode-select -s "$XC/Contents/Developer"
+          xcodebuild -version
 
       - uses: actions/setup-node@v4
         with:
