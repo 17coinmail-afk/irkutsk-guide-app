@@ -1,16 +1,18 @@
-import React, { useRef, useMemo, useCallback } from 'react'
-import { View, Pressable, Text, StyleSheet } from 'react-native'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native'
 import { WebView } from 'react-native-webview'
 import * as Location from 'expo-location'
 import { useRouter } from 'expo-router'
+import { Ionicons } from '@expo/vector-icons'
 import { useContent } from '../../src/content/ContentProvider'
 import { buildMapHtml, type MapPoint } from '../../src/map/leafletHtml'
-import { colors, radius, space, font } from '../../src/theme/tokens'
+import { colors, radius, space, font, fontFamily, shadow } from '../../src/theme/tokens'
 
 export default function MapTab() {
   const { pack, lang, t } = useContent()
   const router = useRouter()
   const ref = useRef<WebView>(null)
+  const [mapLoading, setMapLoading] = useState(true)
 
   const html = useMemo(() => {
     const points: MapPoint[] = (pack?.data.places ?? []).map((p) => ({
@@ -35,14 +37,38 @@ export default function MapTab() {
 
   return (
     <View style={s.wrap}>
-      <WebView ref={ref} originWhitelist={['*']} source={{ html }} style={s.map} onMessage={onMessage} javaScriptEnabled domStorageEnabled />
-      <Pressable style={s.locBtn} onPress={locate}><Text style={s.locTxt}>◎ {t('myLocation')}</Text></Pressable>
+      <WebView
+        ref={ref}
+        originWhitelist={['*']}
+        source={{ html }}
+        style={s.map}
+        onMessage={onMessage}
+        onLoadEnd={() => setMapLoading(false)}
+        javaScriptEnabled
+        domStorageEnabled
+      />
+      {mapLoading && (
+        <View style={s.loader} pointerEvents="none">
+          <ActivityIndicator color={colors.turquoise} size="large" />
+          <Text style={s.loaderTxt}>{t('mapLoading')}</Text>
+        </View>
+      )}
+      <Pressable style={s.locBtn} onPress={locate}>
+        <Ionicons name="navigate" size={16} color={colors.turquoise} />
+        <Text style={s.locTxt}>{t('myLocation')}</Text>
+      </Pressable>
     </View>
   )
 }
 const s = StyleSheet.create({
   wrap: { flex: 1, backgroundColor: colors.bg },
   map: { flex: 1, backgroundColor: colors.bg },
-  locBtn: { position: 'absolute', right: space.md, bottom: space.lg, backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: radius.pill, paddingHorizontal: space.md, paddingVertical: space.sm },
-  locTxt: { color: colors.turquoise, fontSize: font.sizes.sm, fontWeight: '700' },
+  loader: { ...StyleSheet.absoluteFill, backgroundColor: colors.bg, alignItems: 'center', justifyContent: 'center', gap: space.sm },
+  loaderTxt: { color: colors.textMuted, fontFamily: fontFamily.body, fontSize: font.scale.body },
+  locBtn: {
+    position: 'absolute', right: space.md, bottom: space.lg, flexDirection: 'row', alignItems: 'center', gap: 6,
+    backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: radius.pill,
+    paddingHorizontal: space.md, paddingVertical: space.sm, ...shadow.card,
+  },
+  locTxt: { color: colors.turquoise, fontFamily: fontFamily.bodyBold, fontSize: font.scale.small },
 })

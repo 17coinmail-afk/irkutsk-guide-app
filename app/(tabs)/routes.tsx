@@ -1,27 +1,68 @@
 import React, { useMemo, useState } from 'react'
-import { FlatList, StyleSheet } from 'react-native'
+import { FlatList, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { useContent } from '../../src/content/ContentProvider'
-import { filterRoutes } from '../../src/lib/selectors'
-import { RouteCard } from '../../src/components/RouteCard'
+import { filterRoutes, placesById, resolveRouteStops, routeCoverPhoto } from '../../src/lib/selectors'
+import { dayWord } from '../../src/lib/dayWord'
+import { stopWord } from '../../src/lib/stopWord'
+import { PhotoCard } from '../../src/components/PhotoCard'
 import { FilterChips } from '../../src/components/FilterChips'
-import { colors, space } from '../../src/theme/tokens'
+import { Skeleton } from '../../src/components/Skeleton'
+import { colors, space, font, fontFamily } from '../../src/theme/tokens'
 
 const THEMES = ['all', 'classic', 'gastro', 'ice', 'summer', 'family', 'spiritual', 'museum', 'walk', 'nature', 'active', 'olkhon', 'kbzh']
+
 export default function RoutesTab() {
-  const { pack, t } = useContent()
+  const { pack, lang, t } = useContent()
   const router = useRouter()
   const [theme, setTheme] = useState('all')
   const routes = pack?.data.routes ?? []
+  const loading = !pack
+  const byId = useMemo(() => placesById(pack?.data.places ?? []), [pack])
   const opts = THEMES.map((k) => ({ key: k, label: k === 'all' ? t('filterAll') : k }))
   const list = useMemo(() => filterRoutes(routes, { theme: theme === 'all' ? undefined : theme }), [routes, theme])
+
   return (
     <SafeAreaView style={s.safe} edges={['top']}>
       <FilterChips value={theme} options={opts} onChange={setTheme} />
-      <FlatList data={list} keyExtractor={(r) => r.id} contentContainerStyle={s.list}
-        renderItem={({ item }) => <RouteCard route={item} onPress={() => router.push(`/route/${item.slug}`)} />} />
+      {loading ? (
+        <View style={s.list}>
+          <Skeleton style={s.skeletonCard} radius={20} />
+          <Skeleton style={s.skeletonCard} radius={20} />
+          <Skeleton style={s.skeletonCard} radius={20} />
+        </View>
+      ) : (
+        <FlatList
+          data={list}
+          keyExtractor={(r) => r.id}
+          contentContainerStyle={s.list}
+          initialNumToRender={6}
+          renderItem={({ item }) => {
+            const stops = resolveRouteStops(item, byId)
+            const tr = item.translations[lang]
+            return (
+              <PhotoCard
+                size="large"
+                photoUrl={routeCoverPhoto(item, byId)}
+                title={tr.title}
+                chip={item.theme ?? undefined}
+                meta={`${stops.length} ${stopWord(stops.length, lang)} · ${item.difficulty}`}
+                badge={{ value: item.days, label: dayWord(item.days, lang) }}
+                fav={{ kind: 'route', slug: item.slug }}
+                onPress={() => router.push(`/route/${item.slug}`)}
+              />
+            )
+          }}
+          ListEmptyComponent={<Text style={s.empty}>{t('noResults')}</Text>}
+        />
+      )}
     </SafeAreaView>
   )
 }
-const s = StyleSheet.create({ safe: { flex: 1, backgroundColor: colors.bg }, list: { padding: space.md } })
+const s = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: colors.bg },
+  list: { padding: space.md, gap: space.md },
+  skeletonCard: { height: 208 },
+  empty: { color: colors.textMuted, textAlign: 'center', marginTop: space.xl, fontFamily: fontFamily.body, fontSize: font.scale.body },
+})
