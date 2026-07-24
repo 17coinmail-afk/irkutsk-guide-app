@@ -14,3 +14,8 @@ export function filterRoutes(routes: Route[], opt: { theme?: string; days?: numb
 export function resolveRouteStops(route: Route, byId: Map<string, Place>): Place[] {
   return [...route.stops].sort((a, b) => a.position - b.position).map((s) => byId.get(s.placeId)).filter((p): p is Place => !!p)
 }
+// Обложка маршрута: фото первой остановки, у которой оно есть (иначе null → покажем скелетон).
+export function routeCoverPhoto(route: Route, byId: Map<string, Place>): string | null {
+  const stops = resolveRouteStops(route, byId)
+  return stops.find((p) => !!p.photoUrl)?.photoUrl ?? null
+}

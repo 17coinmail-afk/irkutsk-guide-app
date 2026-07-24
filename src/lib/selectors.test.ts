@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { placesById, filterPlaces, filterRoutes, resolveRouteStops } from './selectors'
+import { placesById, filterPlaces, filterRoutes, resolveRouteStops, routeCoverPhoto } from './selectors'
 import type { Place, Route } from './contentTypes'
 const P = (o: Partial<Place>): Place => ({ id: o.id!, slug: o.slug ?? o.id!, section: o.section ?? 'sights', category: o.category ?? 'nature', lat: 0, lng: 0, photoUrl: null, address: null, hours: null, website: null, phone: null, cuisine: null, translations: o.translations ?? { ru: { title: o.id!, description: '' }, en: { title: o.id!, description: '' }, zh: { title: o.id!, description: '' } } })
 describe('selectors', () => {
@@ -20,5 +20,13 @@ describe('selectors', () => {
   it('resolveRouteStops сортирует по position и резолвит места', () => {
     const stops = resolveRouteStops(routes[0], placesById(places))
     expect(stops.map(p => p.id)).toEqual(['a', 'b'])
+  })
+  it('routeCoverPhoto берёт фото первой остановки, у которой оно есть', () => {
+    const withPhoto = [P({ id: 'a' }), P({ id: 'b' })]
+    withPhoto[1].photoUrl = 'https://x/photo.jpg'
+    expect(routeCoverPhoto(routes[0], placesById(withPhoto))).toBe('https://x/photo.jpg')
+  })
+  it('routeCoverPhoto возвращает null, если ни у одной остановки нет фото', () => {
+    expect(routeCoverPhoto(routes[0], placesById(places))).toBeNull()
   })
 })
