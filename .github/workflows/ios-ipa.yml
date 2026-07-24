@@ -13,14 +13,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Select Xcode 16.x (RN 0.86 несовместим с Xcode 26)
+      - name: Select Xcode (Swift 6.2 нужен для ExpoModulesJSI SPM; 26.3 ломает компиляцию → берём 26.2/26.1/26.0)
         run: |
           echo "Доступные Xcode:"; ls -d /Applications/Xcode*.app
-          XC=$(ls -d /Applications/Xcode_16*.app 2>/dev/null | sort -V | tail -1)
-          if [ -z "$XC" ]; then echo "Xcode 16.x не найден!"; exit 1; fi
+          XC=$(ls -d /Applications/Xcode_26.0*.app /Applications/Xcode_26.1*.app /Applications/Xcode_26.2*.app 2>/dev/null | sort -V | tail -1)
+          if [ -z "$XC" ]; then echo "Xcode 26.0-26.2 не найден!"; ls -d /Applications/Xcode_26*.app; exit 1; fi
           echo "Выбираю $XC"
           sudo xcode-select -s "$XC/Contents/Developer"
           xcodebuild -version
+          swift --version
 
       - uses: actions/setup-node@v4
         with:
