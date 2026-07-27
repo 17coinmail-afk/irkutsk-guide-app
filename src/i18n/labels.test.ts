@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { categoryLabel, cuisineLabel, themeLabel, placeChipLabel, LABEL_TABLES } from './labels'
+import { categoryLabel, cuisineLabel, themeLabel, difficultyLabel, placeChipLabel, LABEL_TABLES } from './labels'
 import { LANGS } from './strings'
 
 describe('подписи категорий/кухонь/тем', () => {
@@ -20,6 +20,10 @@ describe('подписи категорий/кухонь/тем', () => {
   it('покрыты все темы маршрутов ContentPack', () => {
     const fromPack = ['classic', 'gastro', 'ice', 'summer', 'family', 'spiritual', 'museum', 'walk', 'nature', 'active', 'olkhon', 'kbzh']
     for (const th of fromPack) expect(themeLabel(th, 'en'), th).not.toBe(th)
+  })
+  it('сложность маршрута переведена', () => {
+    expect(difficultyLabel('easy', 'ru')).toBe('легко')
+    expect(difficultyLabel('hard', 'zh')).toBe('有挑战')
   })
   it('незнакомый ключ отдаётся как есть, а не пустой строкой', () => {
     expect(categoryLabel('spaceport', 'ru')).toBe('spaceport')

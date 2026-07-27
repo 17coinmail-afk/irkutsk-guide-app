@@ -9,7 +9,7 @@ import { stopWord } from '../../src/lib/stopWord'
 import { PhotoCard } from '../../src/components/PhotoCard'
 import { SegmentedChips } from '../../src/components/SegmentedChips'
 import { Skeleton } from '../../src/components/Skeleton'
-import { themeLabel } from '../../src/i18n/labels'
+import { themeLabel, difficultyLabel } from '../../src/i18n/labels'
 import { colors, space, font, fontFamily } from '../../src/theme/tokens'
 
 const THEMES = ['all', 'classic', 'gastro', 'ice', 'summer', 'family', 'spiritual', 'museum', 'walk', 'nature', 'active', 'olkhon', 'kbzh']
@@ -21,7 +21,7 @@ export default function RoutesTab() {
   const routes = pack?.data.routes ?? []
   const loading = !pack
   const byId = useMemo(() => placesById(pack?.data.places ?? []), [pack])
-  const opts = THEMES.map((k) => ({ key: k, label: k === 'all' ? t('filterAll') : k }))
+  const opts = THEMES.map((k) => ({ key: k, label: k === 'all' ? t('filterAll') : themeLabel(k, lang) }))
   const list = useMemo(() => filterRoutes(routes, { theme: theme === 'all' ? undefined : theme }), [routes, theme])
 
   return (
@@ -48,7 +48,7 @@ export default function RoutesTab() {
                 photoUrl={routeCoverPhoto(item, byId)}
                 title={tr.title}
                 chip={themeLabel(item.theme, lang) || undefined}
-                meta={`${stops.length} ${stopWord(stops.length, lang)} · ${item.difficulty}`}
+                meta={`${stops.length} ${stopWord(stops.length, lang)} · ${difficultyLabel(item.difficulty, lang)}`}
                 badge={{ value: item.days, label: dayWord(item.days, lang) }}
                 fav={{ kind: 'route', slug: item.slug }}
                 onPress={() => router.push(`/route/${item.slug}`)}
@@ -63,7 +63,7 @@ export default function RoutesTab() {
 }
 const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
-  list: { padding: space.md, gap: space.md },
+  list: { padding: space.md, paddingBottom: 96, gap: space.md },
   skeletonCard: { height: 208 },
   empty: { color: colors.textMuted, textAlign: 'center', marginTop: space.xl, fontFamily: fontFamily.body, fontSize: font.scale.body },
 })

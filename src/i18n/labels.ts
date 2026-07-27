@@ -44,6 +44,12 @@ const THEME: Record<string, Tri> = {
   kbzh: { ru: 'КБЖД', en: 'Circum-Baikal', zh: '环贝加尔铁路' },
 }
 
+const DIFFICULTY: Record<string, Tri> = {
+  easy: { ru: 'легко', en: 'easy', zh: '轻松' },
+  moderate: { ru: 'средне', en: 'moderate', zh: '中等' },
+  hard: { ru: 'сложно', en: 'hard', zh: '有挑战' },
+}
+
 function lookup(table: Record<string, Tri>, key: string | null | undefined, lang: Lang): string {
   if (!key) return ''
   const row = table[key]
@@ -59,6 +65,9 @@ export function cuisineLabel(key: string | null | undefined, lang: Lang): string
 export function themeLabel(key: string | null | undefined, lang: Lang): string {
   return lookup(THEME, key, lang)
 }
+export function difficultyLabel(key: string | null | undefined, lang: Lang): string {
+  return lookup(DIFFICULTY, key, lang)
+}
 
 /** Подпись для карточки места: у заведений точнее кухня, у остальных — категория. */
 export function placeChipLabel(
@@ -69,4 +78,4 @@ export function placeChipLabel(
   return categoryLabel(place.category, lang)
 }
 
-export const LABEL_TABLES = { CATEGORY, CUISINE, THEME }
+export const LABEL_TABLES = { CATEGORY, CUISINE, THEME, DIFFICULTY }

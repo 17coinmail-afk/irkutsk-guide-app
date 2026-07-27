@@ -46,7 +46,9 @@ export function SegmentedChips({
   }
 
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.row}>
+    // Высота задаётся явно: горизонтальный ScrollView внутри flex-колонки иначе схлопывается.
+    <View style={s.wrap}>
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={s.scroll} contentContainerStyle={s.row}>
       <View style={s.track}>
         {measured ? (
           <Animated.View
@@ -66,10 +68,14 @@ export function SegmentedChips({
         })}
       </View>
     </ScrollView>
+    </View>
   )
 }
 
+const CHIP_H = 38
 const s = StyleSheet.create({
+  wrap: { height: CHIP_H + space.sm * 2 },
+  scroll: { flexGrow: 0 },
   row: { paddingVertical: space.sm, paddingHorizontal: space.md },
   track: { flexDirection: 'row', gap: GAP, position: 'relative' },
   indicator: {
@@ -77,7 +83,7 @@ const s = StyleSheet.create({
     borderRadius: radius.pill, backgroundColor: colors.turquoise,
   },
   chip: {
-    paddingHorizontal: space.md, paddingVertical: 9,
+    paddingHorizontal: space.md, height: CHIP_H, justifyContent: 'center',
     borderRadius: radius.pill, borderWidth: 1, borderColor: colors.border,
     backgroundColor: colors.surface,
   },
