@@ -2,7 +2,7 @@ import type { Lang } from '../i18n/strings'
 export interface Tr { title: string; description: string; story?: string | null; tips?: string | null }
 export interface Place {
   id: string; slug: string; section: 'sights' | 'city'; category: string
-  lat: number; lng: number; photoUrl: string | null
+  lat: number; lng: number; photoUrl: string | null; gallery?: string[] | null
   address: string | null; hours: string | null; website: string | null; phone: string | null; cuisine: string | null
   translations: Record<Lang, Tr>
 }

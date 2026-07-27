@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Animated, Linking, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
+import { Animated, Linking, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
 import { Image } from 'expo-image'
 import { Ionicons } from '@expo/vector-icons'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -62,6 +62,14 @@ export default function PlaceDetail() {
 
         <FadeInUp delay={80} style={s.body}>
           <Text style={s.desc}>{tr.description}</Text>
+
+          {place.gallery && place.gallery.length > 0 ? (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.gallery}>
+              {place.gallery.map((url, i) => (
+                <Image key={i} source={url} style={s.galleryImg} contentFit="cover" cachePolicy="memory-disk" transition={200} />
+              ))}
+            </ScrollView>
+          ) : null}
 
           {tr.story ? (
             <View style={s.storyCard}>
@@ -142,6 +150,8 @@ const s = StyleSheet.create({
   title: { color: colors.text, fontFamily: fontFamily.headingBlack, fontSize: font.scale.hero, lineHeight: font.scale.hero * 1.06 },
   body: { padding: space.md, gap: space.md },
   desc: { color: colors.textMuted, fontFamily: fontFamily.body, fontSize: font.scale.bodyLg, lineHeight: 24 },
+  gallery: { gap: space.sm, paddingVertical: space.xs },
+  galleryImg: { width: 240, height: 160, borderRadius: radius.md, backgroundColor: colors.surfaceAlt },
   storyCard: { backgroundColor: colors.surface, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, borderLeftWidth: 3, borderLeftColor: colors.gold, padding: space.md, gap: space.sm },
   storyHead: { flexDirection: 'row', alignItems: 'center', gap: space.xs },
   storyEyebrow: { color: colors.gold, fontFamily: fontFamily.bodyBold, fontSize: font.scale.chip, letterSpacing: 1, textTransform: 'uppercase' },
