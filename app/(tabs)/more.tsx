@@ -21,6 +21,14 @@ export default function MoreTab() {
           </View>
           <Ionicons name="chevron-forward" size={20} color={colors.textDim} />
         </Pressable>
+        <Pressable style={s.practical} onPress={() => router.push('/assistant')}>
+          <View style={s.practicalIcon}><Ionicons name="sparkles-outline" size={24} color={colors.gold} /></View>
+          <View style={{ flex: 1 }}>
+            <Text style={s.practicalTitle}>{t('assistantTitle')}</Text>
+            <Text style={s.practicalSub} numberOfLines={2}>{t('assistantSub')}</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={colors.textDim} />
+        </Pressable>
         <Text style={s.h}>{t('language')}</Text>
         <View style={s.langRow}>
           {LANGS.map((l) => (

@@ -18,6 +18,8 @@ export type UiKey =
   | 'modWeather' | 'modWeatherSub' | 'modEmergency' | 'modEmergencySub'
   | 'weatherHeader' | 'forecastTitle' | 'iceHeader' | 'approxNote' | 'weatherError'
   | 'pricesApprox' | 'todayLabel'
+  | 'assistantTitle' | 'assistantSub' | 'assistantIntro' | 'assistantPlaceholder'
+  | 'assistantSend' | 'assistantUnconfigured' | 'assistantError' | 'assistantThinking'
 
 export const UI: Record<Lang, Record<UiKey, string>> = {
   ru: {
@@ -51,6 +53,12 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     iceHeader: 'Лёд Байкала', approxNote: 'Данные ориентировочные',
     weatherError: 'Не удалось загрузить погоду. Проверьте интернет.',
     pricesApprox: 'Цены и время ориентировочные', todayLabel: 'Сейчас',
+    assistantTitle: 'AI-помощник', assistantSub: 'Спросите про поездку — бета',
+    assistantIntro: 'Здравствуйте! Я помогу спланировать поездку в Иркутск и на Байкал. Спросите, что посмотреть, куда съездить или как добраться.',
+    assistantPlaceholder: 'Спросите о поездке…', assistantSend: 'Отправить',
+    assistantUnconfigured: 'AI-помощник скоро заработает. Мы его подключаем.',
+    assistantError: 'Не удалось получить ответ. Попробуйте ещё раз.',
+    assistantThinking: 'Думаю…',
   },
   en: {
     tabHome: 'Home', tabPlaces: 'Places', tabRoutes: 'Routes', tabMap: 'Map', tabMore: 'More',
@@ -83,6 +91,12 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     iceHeader: 'Baikal ice', approxNote: 'Figures are approximate',
     weatherError: 'Could not load the weather. Check your connection.',
     pricesApprox: 'Prices and times are approximate', todayLabel: 'Now',
+    assistantTitle: 'AI assistant', assistantSub: 'Ask about your trip — beta',
+    assistantIntro: 'Hi! I can help you plan a trip to Irkutsk and Lake Baikal. Ask what to see, where to go or how to get there.',
+    assistantPlaceholder: 'Ask about your trip…', assistantSend: 'Send',
+    assistantUnconfigured: 'The AI assistant is coming soon. We are hooking it up.',
+    assistantError: 'Could not get a reply. Please try again.',
+    assistantThinking: 'Thinking…',
   },
   zh: {
     tabHome: '主页', tabPlaces: '景点', tabRoutes: '路线', tabMap: '地图', tabMore: '更多',
@@ -115,5 +129,11 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     iceHeader: '贝加尔湖冰情', approxNote: '数据仅供参考',
     weatherError: '无法加载天气，请检查网络。',
     pricesApprox: '价格与时间为大致参考', todayLabel: '当前',
+    assistantTitle: 'AI 助手', assistantSub: '咨询你的行程 — 测试版',
+    assistantIntro: '你好！我可以帮你规划伊尔库茨克与贝加尔湖之旅。问我看什么、去哪里或怎么前往吧。',
+    assistantPlaceholder: '咨询你的行程…', assistantSend: '发送',
+    assistantUnconfigured: 'AI 助手即将上线，我们正在接入。',
+    assistantError: '无法获取回复，请重试。',
+    assistantThinking: '思考中…',
   },
 }

@@ -37,6 +37,7 @@ export default function RootLayout() {
             <Stack.Screen name="practical/phrasebook" />
             <Stack.Screen name="practical/weather" />
             <Stack.Screen name="practical/emergency" />
+            <Stack.Screen name="assistant" />
             <Stack.Screen name="offline-first-run" />
           </Stack>
         </FavoritesProvider>
