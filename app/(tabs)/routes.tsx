@@ -7,7 +7,7 @@ import { filterRoutes, placesById, resolveRouteStops, routeCoverPhoto } from '..
 import { dayWord } from '../../src/lib/dayWord'
 import { stopWord } from '../../src/lib/stopWord'
 import { PhotoCard } from '../../src/components/PhotoCard'
-import { FilterChips } from '../../src/components/FilterChips'
+import { SegmentedChips } from '../../src/components/SegmentedChips'
 import { Skeleton } from '../../src/components/Skeleton'
 import { colors, space, font, fontFamily } from '../../src/theme/tokens'
 
@@ -25,7 +25,7 @@ export default function RoutesTab() {
 
   return (
     <SafeAreaView style={s.safe} edges={['top']}>
-      <FilterChips value={theme} options={opts} onChange={setTheme} />
+      <SegmentedChips value={theme} options={opts} onChange={setTheme} />
       {loading ? (
         <View style={s.list}>
           <Skeleton style={s.skeletonCard} radius={20} />

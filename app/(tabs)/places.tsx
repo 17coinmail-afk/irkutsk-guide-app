@@ -9,7 +9,7 @@ import { filterPlaces } from '../../src/lib/selectors'
 import { sortPlacesByDistance, formatDistance } from '../../src/lib/distance'
 import type { Place } from '../../src/lib/contentTypes'
 import { PhotoCard } from '../../src/components/PhotoCard'
-import { FilterChips } from '../../src/components/FilterChips'
+import { SegmentedChips } from '../../src/components/SegmentedChips'
 import { Skeleton } from '../../src/components/Skeleton'
 import OfflineFirstRun from '../offline-first-run'
 import { colors, space, font, fontFamily, radius } from '../../src/theme/tokens'
@@ -68,7 +68,7 @@ export default function PlacesTab() {
           <Text style={[s.nearTxt, nearby && s.nearTxtOn]}>{t('nearbyToggle')}</Text>
         </Pressable>
       </View>
-      <FilterChips value={section} options={secOpts} onChange={setSection} />
+      <SegmentedChips value={section} options={secOpts} onChange={setSection} />
       {loading ? (
         <View style={s.list}>
           <Skeleton style={s.skeletonHero} radius={radius.photo} />
