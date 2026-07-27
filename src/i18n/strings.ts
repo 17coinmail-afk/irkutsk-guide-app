@@ -20,6 +20,7 @@ export type UiKey =
   | 'pricesApprox' | 'todayLabel'
   | 'assistantTitle' | 'assistantSub' | 'assistantIntro' | 'assistantPlaceholder'
   | 'assistantSend' | 'assistantUnconfigured' | 'assistantError' | 'assistantThinking'
+  | 'storyTitle'
 
 export const UI: Record<Lang, Record<UiKey, string>> = {
   ru: {
@@ -59,6 +60,7 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     assistantUnconfigured: 'AI-помощник скоро заработает. Мы его подключаем.',
     assistantError: 'Не удалось получить ответ. Попробуйте ещё раз.',
     assistantThinking: 'Думаю…',
+    storyTitle: 'История места',
   },
   en: {
     tabHome: 'Home', tabPlaces: 'Places', tabRoutes: 'Routes', tabMap: 'Map', tabMore: 'More',
@@ -97,6 +99,7 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     assistantUnconfigured: 'The AI assistant is coming soon. We are hooking it up.',
     assistantError: 'Could not get a reply. Please try again.',
     assistantThinking: 'Thinking…',
+    storyTitle: 'The story',
   },
   zh: {
     tabHome: '主页', tabPlaces: '景点', tabRoutes: '路线', tabMap: '地图', tabMore: '更多',
@@ -135,5 +138,6 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     assistantUnconfigured: 'AI 助手即将上线，我们正在接入。',
     assistantError: '无法获取回复，请重试。',
     assistantThinking: '思考中…',
+    storyTitle: '背后的故事',
   },
 }

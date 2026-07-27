@@ -63,6 +63,16 @@ export default function PlaceDetail() {
         <FadeInUp delay={80} style={s.body}>
           <Text style={s.desc}>{tr.description}</Text>
 
+          {tr.story ? (
+            <View style={s.storyCard}>
+              <View style={s.storyHead}>
+                <Ionicons name="book-outline" size={16} color={colors.gold} />
+                <Text style={s.storyEyebrow}>{t('storyTitle')}</Text>
+              </View>
+              <Text style={s.storyText}>{tr.story}</Text>
+            </View>
+          ) : null}
+
           {(place.address || place.hours || place.cuisine) && (
             <View style={s.infoCard}>
               {place.address ? (
@@ -122,6 +132,10 @@ const s = StyleSheet.create({
   title: { color: colors.text, fontFamily: fontFamily.headingBlack, fontSize: font.scale.hero, lineHeight: font.scale.hero * 1.06 },
   body: { padding: space.md, gap: space.md },
   desc: { color: colors.textMuted, fontFamily: fontFamily.body, fontSize: font.scale.bodyLg, lineHeight: 24 },
+  storyCard: { backgroundColor: colors.surface, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, borderLeftWidth: 3, borderLeftColor: colors.gold, padding: space.md, gap: space.sm },
+  storyHead: { flexDirection: 'row', alignItems: 'center', gap: space.xs },
+  storyEyebrow: { color: colors.gold, fontFamily: fontFamily.bodyBold, fontSize: font.scale.chip, letterSpacing: 1, textTransform: 'uppercase' },
+  storyText: { color: colors.text, fontFamily: fontFamily.body, fontSize: font.scale.bodyLg, lineHeight: 25 },
   infoCard: { backgroundColor: colors.surface, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, padding: space.md, gap: space.sm },
   infoRow: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
   infoTxt: { color: colors.text, fontFamily: fontFamily.body, fontSize: font.scale.body, flex: 1 },
