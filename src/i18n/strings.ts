@@ -13,6 +13,11 @@ export type UiKey =
   | 'statLabelDepth' | 'statUnitDepth' | 'statLabelAge' | 'statUnitAge'
   | 'statLabelFresh' | 'statUnitFresh' | 'statLabelLength' | 'statUnitLength'
   | 'mapLoading' | 'routesCountLabel'
+  | 'tabPractical' | 'practicalTitle' | 'practicalSubtitle'
+  | 'modGetThere' | 'modGetThereSub' | 'modPhrasebook' | 'modPhrasebookSub'
+  | 'modWeather' | 'modWeatherSub' | 'modEmergency' | 'modEmergencySub'
+  | 'weatherHeader' | 'forecastTitle' | 'iceHeader' | 'approxNote' | 'weatherError'
+  | 'pricesApprox' | 'todayLabel'
 
 export const UI: Record<Lang, Record<UiKey, string>> = {
   ru: {
@@ -36,6 +41,16 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     statLabelFresh: 'пресной воды планеты', statUnitFresh: '%',
     statLabelLength: 'длина озера', statUnitLength: 'км',
     mapLoading: 'Загрузка карты…', routesCountLabel: 'остановок',
+    tabPractical: 'Практика', practicalTitle: 'Практика туриста',
+    practicalSubtitle: 'Всё для поездки: транспорт, язык, погода и помощь.',
+    modGetThere: 'Как добраться', modGetThereSub: 'Аэропорт, Листвянка, Ольхон, КБЖД',
+    modPhrasebook: 'Разговорник', modPhrasebookSub: 'Русские фразы с произношением',
+    modWeather: 'Погода и лёд', modWeatherSub: 'Прогноз и статус льда Байкала',
+    modEmergency: 'Экстренное', modEmergencySub: 'Телефоны служб и консульства',
+    weatherHeader: 'Погода в Иркутске', forecastTitle: 'Прогноз на 5 дней',
+    iceHeader: 'Лёд Байкала', approxNote: 'Данные ориентировочные',
+    weatherError: 'Не удалось загрузить погоду. Проверьте интернет.',
+    pricesApprox: 'Цены и время ориентировочные', todayLabel: 'Сейчас',
   },
   en: {
     tabHome: 'Home', tabPlaces: 'Places', tabRoutes: 'Routes', tabMap: 'Map', tabMore: 'More',
@@ -58,6 +73,16 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     statLabelFresh: 'of the world’s fresh water', statUnitFresh: '%',
     statLabelLength: 'lake length', statUnitLength: 'km',
     mapLoading: 'Loading the map…', routesCountLabel: 'stops',
+    tabPractical: 'Practical', practicalTitle: 'Practical info',
+    practicalSubtitle: 'Everything for your trip: transport, language, weather and help.',
+    modGetThere: 'Getting there', modGetThereSub: 'Airport, Listvyanka, Olkhon, Circum-Baikal',
+    modPhrasebook: 'Phrasebook', modPhrasebookSub: 'Russian phrases with pronunciation',
+    modWeather: 'Weather & ice', modWeatherSub: 'Forecast and Baikal ice status',
+    modEmergency: 'Emergency', modEmergencySub: 'Service numbers and consulate',
+    weatherHeader: 'Weather in Irkutsk', forecastTitle: '5-day forecast',
+    iceHeader: 'Baikal ice', approxNote: 'Figures are approximate',
+    weatherError: 'Could not load the weather. Check your connection.',
+    pricesApprox: 'Prices and times are approximate', todayLabel: 'Now',
   },
   zh: {
     tabHome: '主页', tabPlaces: '景点', tabRoutes: '路线', tabMap: '地图', tabMore: '更多',
@@ -80,5 +105,15 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     statLabelFresh: '全球淡水占比', statUnitFresh: '%',
     statLabelLength: '湖泊长度', statUnitLength: '公里',
     mapLoading: '地图加载中…', routesCountLabel: '站',
+    tabPractical: '实用', practicalTitle: '实用信息',
+    practicalSubtitle: '旅行所需一切：交通、语言、天气与求助。',
+    modGetThere: '如何前往', modGetThereSub: '机场、利斯特维扬卡、奥尔洪、环湖铁路',
+    modPhrasebook: '常用语', modPhrasebookSub: '俄语短语及发音',
+    modWeather: '天气与冰况', modWeatherSub: '预报与贝加尔湖冰情',
+    modEmergency: '紧急', modEmergencySub: '救援电话与领事馆',
+    weatherHeader: '伊尔库茨克天气', forecastTitle: '未来 5 天预报',
+    iceHeader: '贝加尔湖冰情', approxNote: '数据仅供参考',
+    weatherError: '无法加载天气，请检查网络。',
+    pricesApprox: '价格与时间为大致参考', todayLabel: '当前',
   },
 }

@@ -1,15 +1,26 @@
 import React from 'react'
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Ionicons } from '@expo/vector-icons'
+import { useRouter } from 'expo-router'
 import { useContent } from '../../src/content/ContentProvider'
 import { LANGS } from '../../src/i18n/strings'
 import { colors, space, font, fontFamily, radius, shadow } from '../../src/theme/tokens'
 const LABEL: Record<string, string> = { ru: 'Русский', en: 'English', zh: '中文' }
 export default function MoreTab() {
   const { lang, setLang, t, pack } = useContent()
+  const router = useRouter()
   return (
     <SafeAreaView style={s.safe} edges={['top']}>
       <ScrollView contentContainerStyle={s.wrap}>
+        <Pressable style={s.practical} onPress={() => router.push('/practical')}>
+          <View style={s.practicalIcon}><Ionicons name="compass-outline" size={26} color={colors.turquoise} /></View>
+          <View style={{ flex: 1 }}>
+            <Text style={s.practicalTitle}>{t('practicalTitle')}</Text>
+            <Text style={s.practicalSub} numberOfLines={2}>{t('practicalSubtitle')}</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={colors.textDim} />
+        </Pressable>
         <Text style={s.h}>{t('language')}</Text>
         <View style={s.langRow}>
           {LANGS.map((l) => (
@@ -37,6 +48,10 @@ const s = StyleSheet.create({
   langActive: { backgroundColor: colors.turquoise, borderColor: colors.turquoise, ...shadow.glow },
   langTxt: { color: colors.textMuted, fontFamily: fontFamily.bodyMedium },
   langTxtActive: { color: colors.bg, fontFamily: fontFamily.bodyBold },
+  practical: { flexDirection: 'row', alignItems: 'center', gap: space.md, backgroundColor: colors.surface, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.turquoise, padding: space.md, marginTop: space.sm, ...shadow.glow },
+  practicalIcon: { width: 48, height: 48, borderRadius: radius.md, borderWidth: 1.5, borderColor: colors.turquoise, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surfaceAlt },
+  practicalTitle: { color: colors.text, fontFamily: fontFamily.heading, fontSize: font.scale.h2 },
+  practicalSub: { color: colors.textMuted, fontFamily: fontFamily.body, fontSize: font.scale.small, marginTop: 2, lineHeight: 18 },
   card: { backgroundColor: colors.surface, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, padding: space.md, gap: space.md },
   body: { color: colors.textMuted, fontFamily: fontFamily.body, fontSize: font.scale.bodyLg, lineHeight: 24 },
   divider: { height: 1, backgroundColor: colors.border },
