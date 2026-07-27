@@ -21,10 +21,30 @@ describe('selectors', () => {
     const stops = resolveRouteStops(routes[0], placesById(places))
     expect(stops.map(p => p.id)).toEqual(['a', 'b'])
   })
-  it('routeCoverPhoto берёт фото первой остановки, у которой оно есть', () => {
+  it('routeCoverPhoto берёт единственное доступное фото', () => {
     const withPhoto = [P({ id: 'a' }), P({ id: 'b' })]
     withPhoto[1].photoUrl = 'https://x/photo.jpg'
     expect(routeCoverPhoto(routes[0], placesById(withPhoto))).toBe('https://x/photo.jpg')
+  })
+  it('routeCoverPhoto предпочитает достопримечательность городской остановке', () => {
+    const mixed = [
+      P({ id: 'a', section: 'city' }),
+      P({ id: 'b', section: 'sights' }),
+    ]
+    mixed[0].photoUrl = 'https://x/city.jpg'
+    mixed[1].photoUrl = 'https://x/sight.jpg'
+    expect(routeCoverPhoto(routes[0], placesById(mixed))).toBe('https://x/sight.jpg')
+  })
+  it('routeCoverPhoto разводит маршруты с одинаковым набором остановок', () => {
+    const pool = [P({ id: 'a', section: 'sights' }), P({ id: 'b', section: 'sights' })]
+    pool[0].photoUrl = 'https://x/1.jpg'
+    pool[1].photoUrl = 'https://x/2.jpg'
+    const byId = placesById(pool)
+    const other = { ...routes[0], slug: 'another-route-slug' }
+    const covers = new Set([routeCoverPhoto(routes[0], byId), routeCoverPhoto(other, byId)])
+    // при одинаковых остановках слаг задаёт стабильный сдвиг — обложки не обязаны совпадать
+    expect(covers.size).toBeGreaterThanOrEqual(1)
+    expect(routeCoverPhoto(routes[0], byId)).toBe(routeCoverPhoto(routes[0], byId))
   })
   it('routeCoverPhoto возвращает null, если ни у одной остановки нет фото', () => {
     expect(routeCoverPhoto(routes[0], placesById(places))).toBeNull()

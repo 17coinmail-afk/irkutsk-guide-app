@@ -46,11 +46,18 @@ export function homeSections(pack: ContentPack | null): HomeSections {
     })
     .slice(0, 8)
 
+  // Зима и лето стояли рядом с одинаковым фото, когда маршруты начинались с одного места:
+  // для второй карточки берём следующее по порядку фото маршрута.
   const winterRoute = routes.find((r) => r.theme === 'ice')
   const summerRoute = routes.find((r) => r.theme === 'summer')
+  const winterPhoto = firstStopPhoto(winterRoute, byId)
+  const summerPhotos = summerRoute
+    ? resolveRouteStops(summerRoute, byId).map((p) => p.photoUrl).filter((u): u is string => !!u)
+    : []
+  const summerPhoto = summerPhotos.find((u) => u !== winterPhoto) ?? summerPhotos[0] ?? null
   const seasons: SeasonSectionData[] = [
-    { key: 'winter', titleKey: 'seasonWinter', captionKey: 'seasonWinterCaption', photoUrl: firstStopPhoto(winterRoute, byId) },
-    { key: 'summer', titleKey: 'seasonSummer', captionKey: 'seasonSummerCaption', photoUrl: firstStopPhoto(summerRoute, byId) },
+    { key: 'winter', titleKey: 'seasonWinter', captionKey: 'seasonWinterCaption', photoUrl: winterPhoto },
+    { key: 'summer', titleKey: 'seasonSummer', captionKey: 'seasonSummerCaption', photoUrl: summerPhoto },
   ]
 
   return {

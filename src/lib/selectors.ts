@@ -14,8 +14,17 @@ export function filterRoutes(routes: Route[], opt: { theme?: string; days?: numb
 export function resolveRouteStops(route: Route, byId: Map<string, Place>): Place[] {
   return [...route.stops].sort((a, b) => a.position - b.position).map((s) => byId.get(s.placeId)).filter((p): p is Place => !!p)
 }
-// Обложка маршрута: фото первой остановки, у которой оно есть (иначе null → покажем скелетон).
+/**
+ * Обложка маршрута. Первая остановка — плохой выбор: у половины городских маршрутов она одна
+ * и та же, карточки в ленте выглядят одинаковыми. Поэтому берём природные виды в приоритете
+ * и разводим одинаковые старты стабильным сдвигом по слагу маршрута.
+ */
 export function routeCoverPhoto(route: Route, byId: Map<string, Place>): string | null {
-  const stops = resolveRouteStops(route, byId)
-  return stops.find((p) => !!p.photoUrl)?.photoUrl ?? null
+  const withPhoto = resolveRouteStops(route, byId).filter((p) => !!p.photoUrl)
+  if (withPhoto.length === 0) return null
+  const preferred = withPhoto.filter((p) => p.section === 'sights')
+  const pool = preferred.length > 0 ? preferred : withPhoto
+  let hash = 0
+  for (let i = 0; i < route.slug.length; i++) hash = (hash * 31 + route.slug.charCodeAt(i)) >>> 0
+  return pool[hash % pool.length].photoUrl
 }
