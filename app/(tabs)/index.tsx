@@ -1,6 +1,7 @@
 import React, { useMemo, useRef, useState } from 'react'
-import { Animated, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
+import { Animated, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
 import { Image } from 'expo-image'
+import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { useContent } from '../../src/content/ContentProvider'
 import { useFavorites } from '../../src/content/FavoritesProvider'
@@ -11,16 +12,26 @@ import { stopWord } from '../../src/lib/stopWord'
 import { GradientOverlay } from '../../src/components/GradientOverlay'
 import { StatBand, type StatItem } from '../../src/components/StatBand'
 import { SectionHeader } from '../../src/components/SectionHeader'
+import type { UiKey } from '../../src/i18n/strings'
 import { Carousel } from '../../src/components/Carousel'
 import { PhotoCard } from '../../src/components/PhotoCard'
 import { SeasonCard } from '../../src/components/SeasonCard'
 import { Skeleton } from '../../src/components/Skeleton'
 import { FadeInUp } from '../../src/components/FadeInUp'
 import { useReduceMotion } from '../../src/hooks/useReduceMotion'
-import { colors, font, fontFamily, space } from '../../src/theme/tokens'
+import { colors, font, fontFamily, radius, space } from '../../src/theme/tokens'
 import OfflineFirstRun from '../offline-first-run'
 
 const AnimatedImage = Animated.createAnimatedComponent(Image)
+
+// Быстрый доступ к «Практике» и AI прямо с главной.
+const QUICK: { route: string; icon: string; label: UiKey; c: string }[] = [
+  { route: '/practical/getting-there', icon: 'bus-outline', label: 'modGetThere', c: colors.turquoise },
+  { route: '/practical/weather', icon: 'partly-sunny-outline', label: 'modWeather', c: colors.turquoise },
+  { route: '/practical/phrasebook', icon: 'language-outline', label: 'modPhrasebook', c: colors.gold },
+  { route: '/practical/cuisine', icon: 'restaurant-outline', label: 'modCuisine', c: colors.gold },
+  { route: '/assistant', icon: 'sparkles-outline', label: 'assistantTitle', c: colors.gold },
+]
 
 export default function HomeTab() {
   const { pack, lang, t, offlineFirstRun } = useContent()
@@ -87,6 +98,20 @@ export default function HomeTab() {
 
       <FadeInUp delay={60}>
         <View style={s.statWrap}><StatBand stats={stats} /></View>
+      </FadeInUp>
+
+      <FadeInUp delay={90} style={s.section}>
+        <SectionHeader title={t('practicalTitle')} seeAllLabel={t('filterAll')} onSeeAll={() => router.push('/practical')} />
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.quickRow}>
+          {QUICK.map((q) => (
+            <Pressable key={q.route} onPress={() => router.push(q.route as any)} style={({ pressed }) => [s.quick, pressed && { opacity: 0.8 }]}>
+              <View style={[s.quickIcon, { backgroundColor: `${q.c}22`, borderColor: `${q.c}88` }]}>
+                <Ionicons name={q.icon as any} size={24} color={q.c} />
+              </View>
+              <Text style={s.quickLabel} numberOfLines={2}>{t(q.label)}</Text>
+            </Pressable>
+          ))}
+        </ScrollView>
       </FadeInUp>
 
       {sections.mustSee.length > 0 && (
@@ -239,4 +264,8 @@ const s = StyleSheet.create({
   section: { marginTop: space.lg },
   lastSection: { marginBottom: space.md },
   seasonRow: { flexDirection: 'row', gap: space.sm, paddingHorizontal: space.md },
+  quickRow: { gap: space.sm, paddingHorizontal: space.md, paddingTop: space.xs },
+  quick: { width: 84, alignItems: 'center', gap: 6 },
+  quickIcon: { width: 60, height: 60, borderRadius: radius.lg, borderWidth: 1.5, alignItems: 'center', justifyContent: 'center' },
+  quickLabel: { color: colors.textMuted, fontFamily: fontFamily.bodyMedium, fontSize: font.scale.small, textAlign: 'center', lineHeight: 15 },
 })
