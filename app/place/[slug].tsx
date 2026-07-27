@@ -55,13 +55,13 @@ export default function PlaceDetail() {
           ) : null}
           <GradientOverlay variant="hero" />
           <View style={s.heroContent}>
-            <Text style={s.cat}>{place.cuisine ?? place.category}</Text>
+            <Text style={s.cat}>{place.category === 'food' ? tr.description : place.category}</Text>
             <Text style={s.title}>{tr.title}</Text>
           </View>
         </View>
 
         <FadeInUp delay={80} style={s.body}>
-          <Text style={s.desc}>{tr.description}</Text>
+          {place.category !== 'food' ? <Text style={s.desc}>{tr.description}</Text> : null}
 
           {place.gallery && place.gallery.length > 0 ? (
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.gallery}>
