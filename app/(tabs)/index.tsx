@@ -116,7 +116,7 @@ export default function HomeTab() {
 
       <FadeInUp delay={60}>
         <View style={s.statWrap}>
-          <ContourBackdrop height={160} />
+          <ContourBackdrop height={200} opacity={0.1} />
           <StatBand stats={stats} />
         </View>
       </FadeInUp>

@@ -52,7 +52,7 @@ export function StatBand({ stats }: { stats: StatItem[] }) {
 
 const s = StyleSheet.create({
   band: {
-    flexDirection: 'row', flexWrap: 'wrap', backgroundColor: colors.surface,
+    flexDirection: 'row', flexWrap: 'wrap', backgroundColor: 'rgba(17, 26, 35, 0.72)',
     borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border,
     marginHorizontal: space.md, padding: space.md, gap: space.md,
   },
