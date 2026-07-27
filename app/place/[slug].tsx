@@ -10,6 +10,7 @@ import { GradientOverlay } from '../../src/components/GradientOverlay'
 import { Skeleton } from '../../src/components/Skeleton'
 import { FadeInUp } from '../../src/components/FadeInUp'
 import { useReduceMotion } from '../../src/hooks/useReduceMotion'
+import { placeChipLabel } from '../../src/i18n/labels'
 import { colors, space, font, fontFamily, radius, shadow } from '../../src/theme/tokens'
 
 const AnimatedImage = Animated.createAnimatedComponent(Image)
@@ -55,7 +56,7 @@ export default function PlaceDetail() {
           ) : null}
           <GradientOverlay variant="hero" />
           <View style={s.heroContent}>
-            <Text style={s.cat}>{place.category === 'food' ? tr.description : place.category}</Text>
+            <Text style={s.cat}>{placeChipLabel(place, lang)}</Text>
             <Text style={s.title}>{tr.title}</Text>
           </View>
         </View>

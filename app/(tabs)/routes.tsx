@@ -9,6 +9,7 @@ import { stopWord } from '../../src/lib/stopWord'
 import { PhotoCard } from '../../src/components/PhotoCard'
 import { SegmentedChips } from '../../src/components/SegmentedChips'
 import { Skeleton } from '../../src/components/Skeleton'
+import { themeLabel } from '../../src/i18n/labels'
 import { colors, space, font, fontFamily } from '../../src/theme/tokens'
 
 const THEMES = ['all', 'classic', 'gastro', 'ice', 'summer', 'family', 'spiritual', 'museum', 'walk', 'nature', 'active', 'olkhon', 'kbzh']
@@ -46,7 +47,7 @@ export default function RoutesTab() {
                 size="large"
                 photoUrl={routeCoverPhoto(item, byId)}
                 title={tr.title}
-                chip={item.theme ?? undefined}
+                chip={themeLabel(item.theme, lang) || undefined}
                 meta={`${stops.length} ${stopWord(stops.length, lang)} · ${item.difficulty}`}
                 badge={{ value: item.days, label: dayWord(item.days, lang) }}
                 fav={{ kind: 'route', slug: item.slug }}

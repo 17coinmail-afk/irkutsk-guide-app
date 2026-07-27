@@ -27,7 +27,8 @@ export interface PhotoCardProps {
   testID?: string
 }
 
-const HEIGHT: Record<PhotoCardSize, number> = { hero: 240, large: 208, compact: 148 }
+// Вертикальные пропорции (≈4:5) — фото на телефоне работает лучше, чем ландшафтная плитка.
+const HEIGHT: Record<PhotoCardSize, number> = { hero: 300, large: 232, compact: 220 }
 const TITLE_SIZE: Record<PhotoCardSize, number> = { hero: font.scale.h1, large: font.scale.h2, compact: 17 }
 
 function PhotoCardBase({ photoUrl, title, chip, meta, distanceLabel, badge, size = 'large', onPress, fav, width, style, testID }: PhotoCardProps) {

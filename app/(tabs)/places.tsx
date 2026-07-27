@@ -12,6 +12,7 @@ import { PhotoCard } from '../../src/components/PhotoCard'
 import { SegmentedChips } from '../../src/components/SegmentedChips'
 import { Skeleton } from '../../src/components/Skeleton'
 import OfflineFirstRun from '../offline-first-run'
+import { placeChipLabel } from '../../src/i18n/labels'
 import { colors, space, font, fontFamily, radius } from '../../src/theme/tokens'
 
 function placeMeta(place: Place, description: string): string | undefined {
@@ -86,7 +87,7 @@ export default function PlacesTab() {
               size="hero"
               photoUrl={hero.photoUrl}
               title={hero.translations[lang].title}
-              chip={hero.cuisine ?? hero.category}
+              chip={placeChipLabel(hero, lang)}
               meta={placeMeta(hero, hero.translations[lang].description)}
               fav={{ kind: 'place', slug: hero.slug }}
               onPress={() => router.push(`/place/${hero.slug}`)}
@@ -97,7 +98,7 @@ export default function PlacesTab() {
               size="large"
               photoUrl={item.place.photoUrl}
               title={item.place.translations[lang].title}
-              chip={item.place.cuisine ?? item.place.category}
+              chip={placeChipLabel(item.place, lang)}
               meta={placeMeta(item.place, item.place.translations[lang].description)}
               distanceLabel={item.km != null ? formatDistance(item.km, lang) : undefined}
               fav={{ kind: 'place', slug: item.place.slug }}

@@ -10,6 +10,7 @@ import { dayWord } from '../../src/lib/dayWord'
 import { stopWord } from '../../src/lib/stopWord'
 import { PhotoCard } from '../../src/components/PhotoCard'
 import type { Place, Route } from '../../src/lib/contentTypes'
+import { placeChipLabel, themeLabel } from '../../src/i18n/labels'
 import { colors, space, font, fontFamily } from '../../src/theme/tokens'
 
 type Row = { kind: 'place'; place: Place } | { kind: 'route'; route: Route }
@@ -51,7 +52,7 @@ export default function TripTab() {
                 size="large"
                 photoUrl={item.place.photoUrl}
                 title={item.place.translations[lang].title}
-                chip={item.place.cuisine ?? item.place.category}
+                chip={placeChipLabel(item.place, lang)}
                 meta={item.place.address ?? undefined}
                 fav={{ kind: 'place', slug: item.place.slug }}
                 onPress={() => router.push(`/place/${item.place.slug}`)}
@@ -61,7 +62,7 @@ export default function TripTab() {
                 size="large"
                 photoUrl={routeCoverPhoto(item.route, byId)}
                 title={item.route.translations[lang].title}
-                chip={item.route.theme ?? undefined}
+                chip={themeLabel(item.route.theme, lang) || undefined}
                 meta={`${resolveRouteStops(item.route, byId).length} ${stopWord(resolveRouteStops(item.route, byId).length, lang)}`}
                 badge={{ value: item.route.days, label: dayWord(item.route.days, lang) }}
                 fav={{ kind: 'route', slug: item.route.slug }}

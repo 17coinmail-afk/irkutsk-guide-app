@@ -18,7 +18,13 @@ import { PhotoCard } from '../../src/components/PhotoCard'
 import { SeasonCard } from '../../src/components/SeasonCard'
 import { Skeleton } from '../../src/components/Skeleton'
 import { FadeInUp } from '../../src/components/FadeInUp'
+import { KenBurns } from '../../src/components/KenBurns'
+import { Press } from '../../src/components/Press'
+import { Glass } from '../../src/components/Glass'
+import { TodayBar } from '../../src/components/TodayBar'
+import { ContourBackdrop } from '../../src/components/ContourBackdrop'
 import { useReduceMotion } from '../../src/hooks/useReduceMotion'
+import { placeChipLabel, categoryLabel, themeLabel } from '../../src/i18n/labels'
 import { colors, font, fontFamily, radius, space } from '../../src/theme/tokens'
 import OfflineFirstRun from '../offline-first-run'
 
@@ -39,7 +45,7 @@ export default function HomeTab() {
   const router = useRouter()
   const reduceMotion = useReduceMotion()
   const { height: screenHeight, width: screenWidth } = useWindowDimensions()
-  const heroHeight = Math.round(screenHeight * 0.46)
+  const heroHeight = Math.round(screenHeight * 0.55)
   const seasonCardWidth = (screenWidth - space.md * 2 - space.sm) / 2
 
   const [heroLoaded, setHeroLoaded] = useState(false)
@@ -79,37 +85,52 @@ export default function HomeTab() {
       <View style={[s.hero, { height: heroHeight }]}>
         {!heroLoaded && <Skeleton style={StyleSheet.absoluteFill} radius={0} />}
         {sections.hero?.photoUrl ? (
-          <AnimatedImage
+          <KenBurns
             source={sections.hero.photoUrl}
-            style={[StyleSheet.absoluteFill, reduceMotion ? undefined : { transform: [{ translateY: heroTranslateY }, { scale: heroScale }] }]}
-            contentFit="cover"
-            cachePolicy="memory-disk"
-            transition={320}
+            extraTransform={reduceMotion ? undefined : [{ translateY: heroTranslateY }, { scale: heroScale } as never]}
             onLoad={() => setHeroLoaded(true)}
           />
         ) : null}
         <GradientOverlay variant="hero" />
-        <View style={s.heroContent}>
-          <Text style={s.eyebrow}>{t('homeEyebrow')}</Text>
-          <Text style={s.heroTitle}>{t('homeTitle')}</Text>
-          <Text style={s.heroSubtitle}>{t('homeSubtitle')}</Text>
-        </View>
+        {/* Герой — конкретное место, а не слоган: издательская обложка вместо рекламной шапки. */}
+        <Press
+          onPress={() => sections.hero && router.push(`/place/${sections.hero.slug}`)}
+          haptic="light"
+          style={s.heroPress}
+        >
+          <View style={s.heroContent}>
+            <Text style={s.eyebrow}>{t('homeEyebrow')}</Text>
+            <Text style={s.heroTitle} numberOfLines={2}>
+              {sections.hero ? sections.hero.translations[lang].title : t('homeTitle')}
+            </Text>
+            <Text style={s.heroMeta} numberOfLines={1}>
+              {sections.hero
+                ? categoryLabel(sections.hero.category, lang).toUpperCase()
+                : t('homeSubtitle')}
+            </Text>
+          </View>
+        </Press>
       </View>
 
+      <View style={s.todayWrap}><TodayBar /></View>
+
       <FadeInUp delay={60}>
-        <View style={s.statWrap}><StatBand stats={stats} /></View>
+        <View style={s.statWrap}>
+          <ContourBackdrop height={160} />
+          <StatBand stats={stats} />
+        </View>
       </FadeInUp>
 
       <FadeInUp delay={90} style={s.section}>
         <SectionHeader title={t('practicalTitle')} seeAllLabel={t('filterAll')} onSeeAll={() => router.push('/practical')} />
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.quickRow}>
           {QUICK.map((q) => (
-            <Pressable key={q.route} onPress={() => router.push(q.route as any)} style={({ pressed }) => [s.quick, pressed && { opacity: 0.8 }]}>
-              <View style={[s.quickIcon, { backgroundColor: `${q.c}22`, borderColor: `${q.c}88` }]}>
-                <Ionicons name={q.icon as any} size={24} color={q.c} />
-              </View>
-              <Text style={s.quickLabel} numberOfLines={2}>{t(q.label)}</Text>
-            </Pressable>
+            <Press key={q.route} onPress={() => router.push(q.route as never)} haptic="light">
+              <Glass edge="none" style={s.quickPill}>
+                <Ionicons name={q.icon as never} size={18} color={q.c} />
+                <Text style={s.quickLabel} numberOfLines={1}>{t(q.label)}</Text>
+              </Glass>
+            </Press>
           ))}
         </ScrollView>
       </FadeInUp>
@@ -122,11 +143,11 @@ export default function HomeTab() {
             keyExtractor={(p) => p.id}
             renderItem={({ item }) => (
               <PhotoCard
-                width={224}
+                width={176}
                 size="compact"
                 photoUrl={item.photoUrl}
                 title={item.translations[lang].title}
-                chip={item.category}
+                chip={placeChipLabel(item, lang)}
                 fav={{ kind: 'place', slug: item.slug }}
                 onPress={() => router.push(`/place/${item.slug}`)}
               />
@@ -145,11 +166,11 @@ export default function HomeTab() {
               const stops = resolveRouteStops(item, byId)
               return (
                 <PhotoCard
-                  width={224}
+                  width={176}
                   size="compact"
                   photoUrl={routeCoverPhoto(item, byId)}
                   title={item.translations[lang].title}
-                  chip={item.theme ?? undefined}
+                  chip={themeLabel(item.theme, lang) || undefined}
                   meta={`${stops.length} ${stopWord(stops.length, lang)}`}
                   badge={{ value: item.days, label: dayWord(item.days, lang) }}
                   fav={{ kind: 'route', slug: item.slug }}
@@ -180,11 +201,11 @@ export default function HomeTab() {
             keyExtractor={(p) => p.id}
             renderItem={({ item }) => (
               <PhotoCard
-                width={224}
+                width={176}
                 size="compact"
                 photoUrl={item.photoUrl}
                 title={item.translations[lang].title}
-                chip={item.category}
+                chip={placeChipLabel(item, lang)}
                 fav={{ kind: 'place', slug: item.slug }}
                 onPress={() => router.push(`/place/${item.slug}`)}
               />
@@ -201,11 +222,11 @@ export default function HomeTab() {
             keyExtractor={(p) => p.id}
             renderItem={({ item }) => (
               <PhotoCard
-                width={224}
+                width={176}
                 size="compact"
                 photoUrl={item.photoUrl}
                 title={item.translations[lang].title}
-                chip={item.cuisine ?? item.category}
+                chip={placeChipLabel(item, lang)}
                 meta={item.address ?? undefined}
                 fav={{ kind: 'place', slug: item.slug }}
                 onPress={() => router.push(`/place/${item.slug}`)}
@@ -224,21 +245,21 @@ export default function HomeTab() {
             renderItem={({ item }) =>
               item.kind === 'place' ? (
                 <PhotoCard
-                  width={224}
+                  width={176}
                   size="compact"
                   photoUrl={item.p.photoUrl}
                   title={item.p.translations[lang].title}
-                  chip={item.p.cuisine ?? item.p.category}
+                  chip={placeChipLabel(item.p, lang)}
                   fav={{ kind: 'place', slug: item.p.slug }}
                   onPress={() => router.push(`/place/${item.p.slug}`)}
                 />
               ) : (
                 <PhotoCard
-                  width={224}
+                  width={176}
                   size="compact"
                   photoUrl={routeCoverPhoto(item.r, byId)}
                   title={item.r.translations[lang].title}
-                  chip={item.r.theme ?? undefined}
+                  chip={themeLabel(item.r.theme, lang) || undefined}
                   badge={{ value: item.r.days, label: dayWord(item.r.days, lang) }}
                   fav={{ kind: 'route', slug: item.r.slug }}
                   onPress={() => router.push(`/route/${item.r.slug}`)}
@@ -256,16 +277,17 @@ const s = StyleSheet.create({
   wrap: { flex: 1, backgroundColor: colors.bg },
   content: { paddingBottom: space.xl },
   hero: { width: '100%', overflow: 'hidden', backgroundColor: colors.surfaceAlt, justifyContent: 'flex-end' },
+  heroPress: { position: 'absolute', left: 0, right: 0, bottom: 0 },
   heroContent: { padding: space.lg, paddingBottom: space.lg },
   eyebrow: { color: colors.turquoise, fontFamily: fontFamily.bodyBold, fontSize: font.scale.chip, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: space.sm },
   heroTitle: { color: colors.text, fontFamily: fontFamily.headingBlack, fontSize: font.scale.hero, lineHeight: font.scale.hero * 1.08 },
-  heroSubtitle: { color: colors.textMuted, fontFamily: fontFamily.body, fontSize: font.scale.bodyLg, marginTop: space.sm, lineHeight: 22 },
-  statWrap: { marginTop: -space.lg, marginBottom: space.md },
-  section: { marginTop: space.lg },
+  heroMeta: { color: colors.textMuted, fontFamily: fontFamily.bodyMedium, fontSize: font.scale.small, marginTop: space.sm, letterSpacing: 0.8 },
+  todayWrap: { marginTop: -space.lg, marginBottom: space.smd, zIndex: 2 },
+  statWrap: { marginBottom: space.md, overflow: 'hidden' },
+  section: { marginTop: space.xl },
   lastSection: { marginBottom: space.md },
   seasonRow: { flexDirection: 'row', gap: space.sm, paddingHorizontal: space.md },
   quickRow: { gap: space.sm, paddingHorizontal: space.md, paddingTop: space.xs },
-  quick: { width: 84, alignItems: 'center', gap: 6 },
-  quickIcon: { width: 60, height: 60, borderRadius: radius.lg, borderWidth: 1.5, alignItems: 'center', justifyContent: 'center' },
-  quickLabel: { color: colors.textMuted, fontFamily: fontFamily.bodyMedium, fontSize: font.scale.small, textAlign: 'center', lineHeight: 15 },
+  quickPill: { flexDirection: 'row', alignItems: 'center', gap: space.sm, paddingHorizontal: space.md, paddingVertical: 10, borderRadius: radius.pill, borderWidth: StyleSheet.hairlineWidth, borderColor: colors.borderSoft },
+  quickLabel: { color: colors.text, fontFamily: fontFamily.bodyMedium, fontSize: font.scale.small },
 })
