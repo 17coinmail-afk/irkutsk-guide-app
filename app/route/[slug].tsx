@@ -15,6 +15,13 @@ import { GradientOverlay } from '../../src/components/GradientOverlay'
 import { Skeleton } from '../../src/components/Skeleton'
 import { PhotoCard } from '../../src/components/PhotoCard'
 import { FadeInUp } from '../../src/components/FadeInUp'
+import { GlassHeader } from '../../src/components/GlassHeader'
+import { Glass } from '../../src/components/Glass'
+import { Press } from '../../src/components/Press'
+import { Shimmer } from '../../src/components/Shimmer'
+import { KenBurns } from '../../src/components/KenBurns'
+import { StopTimeline, type TimelineStop } from '../../src/components/StopTimeline'
+import { themeLabel } from '../../src/i18n/labels'
 import { useReduceMotion } from '../../src/hooks/useReduceMotion'
 import { colors, space, font, fontFamily, radius } from '../../src/theme/tokens'
 
@@ -46,8 +53,19 @@ export default function RouteDetail() {
   if (!route) return <View style={s.notFound}><Text style={s.notFoundTxt}>—</Text></View>
   const tr = route.translations[lang]
 
+  const timelineStops: TimelineStop[] = stops.map((p) => ({
+    id: p.id, slug: p.slug, photoUrl: p.photoUrl, category: p.category, cuisine: p.cuisine,
+    title: p.translations[lang].title, subtitle: p.translations[lang].description,
+  }))
+
   return (
     <View style={s.wrap}>
+      <GlassHeader
+        title={tr.title}
+        scrollY={scrollY}
+        onBack={() => router.back()}
+        right={<FavHeart kind="route" slug={route.slug} size={22} />}
+      />
       <Animated.ScrollView
         contentContainerStyle={s.scrollContent}
         onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
@@ -56,21 +74,12 @@ export default function RouteDetail() {
       >
         <View style={[s.hero, { height: heroHeight }]}>
           {!heroLoaded && <Skeleton style={StyleSheet.absoluteFill} radius={0} />}
-          {cover ? (
-            <AnimatedImage
-              source={cover}
-              style={[StyleSheet.absoluteFill, reduceMotion ? undefined : { transform: [{ scale: heroScale }] }]}
-              contentFit="cover"
-              cachePolicy="memory-disk"
-              transition={280}
-              onLoad={() => setHeroLoaded(true)}
-            />
-          ) : null}
+          {cover ? <KenBurns source={cover} onLoad={() => setHeroLoaded(true)} /> : null}
           <GradientOverlay variant="hero" />
           <View style={s.heroContent}>
-            {route.theme ? <Text style={s.cat}>{route.theme}</Text> : null}
+            {route.theme ? <Text style={s.cat}>{themeLabel(route.theme, lang)}</Text> : null}
             <Text style={s.title}>{tr.title}</Text>
-            <Text style={s.meta}>{route.days} {dayWord(route.days, lang)} · {stops.length} {stopWord(stops.length, lang)} · {route.difficulty}</Text>
+            <Text style={s.meta}>{route.days} {dayWord(route.days, lang)} · {stops.length} {stopWord(stops.length, lang)} </Text>
           </View>
         </View>
 
@@ -90,39 +99,35 @@ export default function RouteDetail() {
           </FadeInUp>
         )}
 
-        <View style={s.timeline}>
-          {stops.map((p, i) => (
-            <FadeInUp key={p.id} delay={160 + i * 40} style={s.stopRow}>
-              <View style={s.stopIndexCol}>
-                <Text style={s.idx}>{i + 1}</Text>
-                {i < stops.length - 1 ? <View style={s.stopLine} /> : null}
-              </View>
-              <View style={s.stopCard}>
-                <PhotoCard
-                  size="compact"
-                  style={s.stopPhoto}
-                  photoUrl={p.photoUrl}
-                  title={p.translations[lang].title}
-                  chip={p.cuisine ?? p.category}
-                  fav={{ kind: 'place', slug: p.slug }}
-                  onPress={() => router.push(`/place/${p.slug}`)}
-                />
-              </View>
-            </FadeInUp>
-          ))}
-        </View>
+        <StopTimeline
+          stops={timelineStops}
+          days={route.days}
+          lang={lang}
+          dayLabel={(d) => (lang === 'zh' ? `第${d}天` : lang === 'en' ? `Day ${d}` : `День ${d}`)}
+          onPress={(slug) => router.push(`/place/${slug}`)}
+          reduceMotion={reduceMotion}
+        />
       </Animated.ScrollView>
 
-      <Pressable onPress={() => router.back()} style={[s.backBtn, { top: insets.top + space.sm }]} hitSlop={8}>
-        <Ionicons name="chevron-back" size={22} color={colors.text} />
-      </Pressable>
-      <FavHeart kind="route" slug={route.slug} size={24} style={[s.heart, { top: insets.top + space.sm }]} />
+      <Glass edge="top" style={[s.dock, { paddingBottom: insets.bottom + space.sm }]}>
+        <Press
+          onPress={() => router.push({ pathname: '/map', params: { route: route.slug } })}
+          haptic="light"
+          style={s.dockPrimaryWrap}
+        >
+          <View style={s.primaryBtn}>
+            <Shimmer radius={radius.pill} />
+            <Ionicons name="map" size={18} color={colors.bg} />
+            <Text style={s.primaryTxt}>{t('showOnMap')}</Text>
+          </View>
+        </Press>
+      </Glass>
     </View>
   )
 }
 const s = StyleSheet.create({
   wrap: { flex: 1, backgroundColor: colors.bg },
-  scrollContent: { paddingBottom: space.xl },
+  scrollContent: { paddingBottom: 110 },
   hero: { width: '100%', overflow: 'hidden', backgroundColor: colors.surfaceAlt, justifyContent: 'flex-end' },
   heroContent: { padding: space.lg },
   cat: { color: colors.turquoise, fontFamily: fontFamily.bodyBold, fontSize: font.scale.chip, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: space.xs },
@@ -143,6 +148,10 @@ const s = StyleSheet.create({
   stopPhoto: { width: '100%' },
   backBtn: { position: 'absolute', left: space.sm, width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(10,15,22,0.55)', alignItems: 'center', justifyContent: 'center' },
   heart: { position: 'absolute', right: space.sm },
+  dock: { position: 'absolute', left: 0, right: 0, bottom: 0, flexDirection: 'row', alignItems: 'center', gap: space.sm, paddingHorizontal: space.md, paddingTop: space.sm },
+  dockPrimaryWrap: { flex: 1 },
+  primaryBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: colors.turquoise, borderRadius: radius.pill, paddingVertical: 13, overflow: 'hidden' },
+  primaryTxt: { color: colors.bg, fontFamily: fontFamily.bodyBold, fontSize: font.scale.bodyLg },
   notFound: { flex: 1, backgroundColor: colors.bg, alignItems: 'center', justifyContent: 'center' },
   notFoundTxt: { color: colors.textMuted, fontFamily: fontFamily.body },
 })
