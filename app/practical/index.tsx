@@ -11,6 +11,9 @@ const MODULES: { route: string; icon: string; title: UiKey; sub: UiKey; tint: st
   { route: '/practical/getting-there', icon: 'bus-outline', title: 'modGetThere', sub: 'modGetThereSub', tint: colors.turquoise },
   { route: '/practical/phrasebook', icon: 'language-outline', title: 'modPhrasebook', sub: 'modPhrasebookSub', tint: colors.gold },
   { route: '/practical/weather', icon: 'partly-sunny-outline', title: 'modWeather', sub: 'modWeatherSub', tint: colors.turquoise },
+  { route: '/practical/cuisine', icon: 'restaurant-outline', title: 'modCuisine', sub: 'modCuisineSub', tint: colors.gold },
+  { route: '/practical/souvenirs', icon: 'gift-outline', title: 'modSouvenirs', sub: 'modSouvenirsSub', tint: colors.turquoise },
+  { route: '/practical/events', icon: 'calendar-outline', title: 'modEvents', sub: 'modEventsSub', tint: colors.gold },
   { route: '/practical/emergency', icon: 'alert-circle-outline', title: 'modEmergency', sub: 'modEmergencySub', tint: colors.danger },
 ]
 

@@ -21,6 +21,8 @@ export type UiKey =
   | 'assistantTitle' | 'assistantSub' | 'assistantIntro' | 'assistantPlaceholder'
   | 'assistantSend' | 'assistantUnconfigured' | 'assistantError' | 'assistantThinking'
   | 'storyTitle'
+  | 'modCuisine' | 'modCuisineSub' | 'modSouvenirs' | 'modSouvenirsSub'
+  | 'modEvents' | 'modEventsSub' | 'datesNote' | 'tipsTitle'
 
 export const UI: Record<Lang, Record<UiKey, string>> = {
   ru: {
@@ -61,6 +63,11 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     assistantError: 'Не удалось получить ответ. Попробуйте ещё раз.',
     assistantThinking: 'Думаю…',
     storyTitle: 'История места',
+    modCuisine: 'Кухня Байкала', modCuisineSub: 'Что обязательно попробовать',
+    modSouvenirs: 'Сувениры', modSouvenirsSub: 'Что привезти домой',
+    modEvents: 'События года', modEventsSub: 'Фестивали и праздники по сезонам',
+    datesNote: 'Даты уточняйте перед поездкой',
+    tipsTitle: 'Как добраться и когда ехать',
   },
   en: {
     tabHome: 'Home', tabPlaces: 'Places', tabRoutes: 'Routes', tabMap: 'Map', tabMore: 'More',
@@ -100,6 +107,11 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     assistantError: 'Could not get a reply. Please try again.',
     assistantThinking: 'Thinking…',
     storyTitle: 'The story',
+    modCuisine: 'Baikal cuisine', modCuisineSub: 'What you must try',
+    modSouvenirs: 'Souvenirs', modSouvenirsSub: 'What to bring home',
+    modEvents: 'Year’s events', modEventsSub: 'Festivals and holidays by season',
+    datesNote: 'Check the dates before your trip',
+    tipsTitle: 'Getting there & when to go',
   },
   zh: {
     tabHome: '主页', tabPlaces: '景点', tabRoutes: '路线', tabMap: '地图', tabMore: '更多',
@@ -139,5 +151,10 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     assistantError: '无法获取回复，请重试。',
     assistantThinking: '思考中…',
     storyTitle: '背后的故事',
+    modCuisine: '贝加尔美食', modCuisineSub: '必尝美味',
+    modSouvenirs: '纪念品', modSouvenirsSub: '带什么回家',
+    modEvents: '年度活动', modEventsSub: '各季节的节庆与活动',
+    datesNote: '出行前请确认日期',
+    tipsTitle: '如何前往与何时出行',
   },
 }

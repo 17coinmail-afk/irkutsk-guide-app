@@ -73,6 +73,16 @@ export default function PlaceDetail() {
             </View>
           ) : null}
 
+          {tr.tips ? (
+            <View style={s.tipsCard}>
+              <View style={s.storyHead}>
+                <Ionicons name="navigate-circle-outline" size={16} color={colors.turquoise} />
+                <Text style={s.tipsEyebrow}>{t('tipsTitle')}</Text>
+              </View>
+              <Text style={s.storyText}>{tr.tips}</Text>
+            </View>
+          ) : null}
+
           {(place.address || place.hours || place.cuisine) && (
             <View style={s.infoCard}>
               {place.address ? (
@@ -136,6 +146,8 @@ const s = StyleSheet.create({
   storyHead: { flexDirection: 'row', alignItems: 'center', gap: space.xs },
   storyEyebrow: { color: colors.gold, fontFamily: fontFamily.bodyBold, fontSize: font.scale.chip, letterSpacing: 1, textTransform: 'uppercase' },
   storyText: { color: colors.text, fontFamily: fontFamily.body, fontSize: font.scale.bodyLg, lineHeight: 25 },
+  tipsCard: { backgroundColor: colors.surface, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, borderLeftWidth: 3, borderLeftColor: colors.turquoise, padding: space.md, gap: space.sm },
+  tipsEyebrow: { color: colors.turquoise, fontFamily: fontFamily.bodyBold, fontSize: font.scale.chip, letterSpacing: 1, textTransform: 'uppercase' },
   infoCard: { backgroundColor: colors.surface, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, padding: space.md, gap: space.sm },
   infoRow: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
   infoTxt: { color: colors.text, fontFamily: fontFamily.body, fontSize: font.scale.body, flex: 1 },
