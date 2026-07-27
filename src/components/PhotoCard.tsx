@@ -1,12 +1,12 @@
-import React, { useRef, useState } from 'react'
-import { Animated, Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native'
+import React, { useState } from 'react'
+import { StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native'
 import { Image } from 'expo-image'
 import { colors, radius, space, font, fontFamily, shadow } from '../theme/tokens'
 import { GradientOverlay } from './GradientOverlay'
 import { Skeleton } from './Skeleton'
 import { FavHeart } from './FavHeart'
+import { Press } from './Press'
 import type { FavKind } from '../lib/favorites'
-import { useReduceMotion } from '../hooks/useReduceMotion'
 
 export type PhotoCardSize = 'hero' | 'large' | 'compact'
 export interface PhotoCardBadge { value: string | number; label: string }
@@ -32,22 +32,11 @@ const TITLE_SIZE: Record<PhotoCardSize, number> = { hero: font.scale.h1, large: 
 
 function PhotoCardBase({ photoUrl, title, chip, meta, distanceLabel, badge, size = 'large', onPress, fav, width, style, testID }: PhotoCardProps) {
   const [loaded, setLoaded] = useState(false)
-  const scale = useRef(new Animated.Value(1)).current
-  const reduceMotion = useReduceMotion()
-
-  const pressIn = () => {
-    if (reduceMotion) return
-    Animated.spring(scale, { toValue: 0.97, useNativeDriver: true, speed: 40, bounciness: 0 }).start()
-  }
-  const pressOut = () => {
-    if (reduceMotion) return
-    Animated.spring(scale, { toValue: 1, useNativeDriver: true, speed: 24, bounciness: 6 }).start()
-  }
 
   const height = HEIGHT[size]
   return (
-    <Animated.View style={[width ? { width } : s.fullWidth, { transform: [{ scale }] }, style]}>
-      <Pressable onPress={onPress} onPressIn={pressIn} onPressOut={pressOut} testID={testID} style={[s.card, { height }]}>
+    <Press onPress={onPress} testID={testID} accessibilityLabel={title} style={[width ? { width } : s.fullWidth, style]}>
+      <View style={[s.card, { height }]}>
         <View style={StyleSheet.absoluteFill}>
           {!loaded && <Skeleton style={StyleSheet.absoluteFill} radius={radius.photo} />}
           {photoUrl ? (
@@ -75,8 +64,8 @@ function PhotoCardBase({ photoUrl, title, chip, meta, distanceLabel, badge, size
           {meta ? <Text style={s.meta} numberOfLines={1}>{meta}</Text> : null}
           {distanceLabel ? <Text style={s.distance}>{distanceLabel}</Text> : null}
         </View>
-      </Pressable>
-    </Animated.View>
+      </View>
+    </Press>
   )
 }
 
