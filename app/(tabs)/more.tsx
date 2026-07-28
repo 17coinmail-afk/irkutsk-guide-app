@@ -58,7 +58,7 @@ export default function MoreTab() {
 const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   wrap: { padding: space.md, gap: space.md, paddingBottom: space.xl },
-  h: { color: colors.text, fontFamily: fontFamily.heading, fontSize: font.scale.h1, marginTop: space.md },
+  h: { color: colors.text, fontFamily: fontFamily.heading, fontSize: font.scale.h2, marginTop: space.md },
   langRow: { flexDirection: 'row', gap: space.sm },
   langBtn: { paddingHorizontal: space.md, paddingVertical: space.sm, borderRadius: radius.pill, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
   langActive: { backgroundColor: colors.turquoise, borderColor: colors.turquoise, ...shadow.glow },

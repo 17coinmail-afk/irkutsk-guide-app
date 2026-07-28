@@ -1,12 +1,11 @@
 import React, { useRef, useState } from 'react'
-import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
+import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useContent } from '../src/content/ContentProvider'
 import { Press } from '../src/components/Press'
-import { Glass } from '../src/components/Glass'
+import { MARKS, type MarkKey } from '../src/content/marks'
 import { colors, font, fontFamily, radius, space } from '../src/theme/tokens'
 import type { UiKey } from '../src/i18n/strings'
 
@@ -14,11 +13,15 @@ export const ONBOARDING_KEY = 'ig_onboarding_done'
 
 const { width } = Dimensions.get('window')
 
-/** Три экрана: что это, что скачать до поездки, где искать практику. Больше — не читают. */
-const SLIDES: { icon: string; title: UiKey; text: UiKey }[] = [
-  { icon: 'compass-outline', title: 'obTitle1', text: 'obText1' },
-  { icon: 'cloud-download-outline', title: 'obTitle2', text: 'obText2' },
-  { icon: 'bus-outline', title: 'obTitle3', text: 'obText3' },
+/**
+ * Три экрана: что это, что скачать до поездки, где искать практику. Больше — не читают.
+ * Знаки вместо иконок: бабр с герба, лёд Байкала и паровоз Кругобайкалки — первое,
+ * что видит приезжий, должно быть про это место, а не про компас из любого приложения.
+ */
+const SLIDES: { mark: MarkKey; title: UiKey; text: UiKey }[] = [
+  { mark: 'babr', title: 'obTitle1', text: 'obText1' },
+  { mark: 'ice', title: 'obTitle2', text: 'obText2' },
+  { mark: 'train', title: 'obTitle3', text: 'obText3' },
 ]
 
 export default function Onboarding() {
@@ -50,9 +53,12 @@ export default function Onboarding() {
       >
         {SLIDES.map((slide) => (
           <View key={slide.title} style={[s.slide, { width }]}>
-            <Glass edge="top" density="regular" style={s.iconWrap}>
-              <Ionicons name={slide.icon as never} size={40} color={colors.turquoise} />
-            </Glass>
+            <Image
+              source={MARKS[slide.mark]}
+              style={s.mark}
+              resizeMode="contain"
+              accessibilityIgnoresInvertColors
+            />
             <Text style={s.title}>{t(slide.title)}</Text>
             <Text style={s.text}>{t(slide.text)}</Text>
           </View>
@@ -84,10 +90,7 @@ export default function Onboarding() {
 const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   slide: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: space.xl, gap: space.md },
-  iconWrap: {
-    width: 88, height: 88, borderRadius: 44, alignItems: 'center', justifyContent: 'center',
-    borderWidth: StyleSheet.hairlineWidth, borderColor: 'rgba(255,255,255,0.16)',
-  },
+  mark: { width: 168, height: 168, opacity: 0.9 },
   title: {
     color: colors.text, fontFamily: fontFamily.heading, fontSize: font.scale.h1,
     textAlign: 'center', marginTop: space.sm,

@@ -3,7 +3,7 @@ import { Tabs } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 import { useContent } from '../../src/content/ContentProvider'
 import { GlassTabBar } from '../../src/components/GlassTabBar'
-import { colors, fontFamily } from '../../src/theme/tokens'
+import { colors, font, fontFamily } from '../../src/theme/tokens'
 
 export default function TabsLayout() {
   const { t } = useContent()
@@ -12,8 +12,11 @@ export default function TabsLayout() {
       tabBar={(props) => <GlassTabBar {...props} />}
       screenOptions={{
         headerStyle: { backgroundColor: colors.surface },
-        headerTitleStyle: { fontFamily: fontFamily.heading },
+        headerTitleStyle: { fontFamily: fontFamily.heading, fontSize: font.scale.h2 },
         headerTintColor: colors.text,
+        // Дефолтная разделительная линия рисуется светлой и в почти чёрной палитре
+        // читается как случайная белая черта под заголовком.
+        headerShadowVisible: false,
         sceneStyle: { backgroundColor: colors.bg },
       }}
     >
