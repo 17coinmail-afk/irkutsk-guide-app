@@ -10,7 +10,7 @@ export interface Fact { icon: string; text: string; note?: string }
 export function FactCard({ eyebrow, facts }: { eyebrow: string; facts: Fact[] }) {
   if (facts.length === 0) return null
   return (
-    <Glass edge="none" style={s.card} intensity={55}>
+    <Glass edge="top" density="regular" style={s.card}>
       {eyebrow ? <Text style={s.eyebrow}>{eyebrow}</Text> : null}
       {facts.map((f, i) => (
         <View key={i} style={s.row}>

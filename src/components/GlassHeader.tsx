@@ -30,7 +30,7 @@ export function GlassHeader({
   return (
     <View pointerEvents="box-none" style={[s.wrap, { paddingTop: insets.top }]}>
       <Animated.View style={[StyleSheet.absoluteFill, { opacity: glassOpacity }]} pointerEvents="none">
-        <Glass edge="bottom" style={StyleSheet.absoluteFill} />
+        <Glass edge="bottom" density="dense" style={StyleSheet.absoluteFill} />
       </Animated.View>
 
       <View style={s.row}>

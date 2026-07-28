@@ -109,7 +109,7 @@ export default function RouteDetail() {
         />
       </Animated.ScrollView>
 
-      <Glass edge="top" style={[s.dock, { paddingBottom: insets.bottom + space.sm }]}>
+      <Glass edge="top" density="dense" style={[s.dock, { paddingBottom: insets.bottom + space.sm }]}>
         <Press
           onPress={() => router.push({ pathname: '/map', params: { route: route.slug } })}
           haptic="light"

@@ -67,7 +67,7 @@ export default function PlacesTab() {
 
   return (
     <SafeAreaView style={s.safe} edges={['top']}>
-      <Glass edge="bottom" style={s.header}>
+      <Glass edge="bottom" density="dense" style={s.header}>
         <View style={s.searchRow}>
           <View style={s.searchBox}>
             <Ionicons name="search" size={16} color={colors.textDim} />

@@ -212,7 +212,7 @@ export default function PlaceDetail() {
       </Animated.ScrollView>
 
       {/* Липкая полоса действий: главное — показать на карте, рядом — сохранить в поездку. */}
-      <Glass edge="top" style={[s.dock, { paddingBottom: insets.bottom + space.sm }]}>
+      <Glass edge="top" density="dense" style={[s.dock, { paddingBottom: insets.bottom + space.sm }]}>
         <Press
           onPress={() => router.push({ pathname: '/map', params: { flat: String(place.lat), flng: String(place.lng) } })}
           haptic="light"

@@ -80,7 +80,9 @@ const s = StyleSheet.create({
   track: { flexDirection: 'row', gap: GAP, position: 'relative' },
   indicator: {
     position: 'absolute', left: 0, top: 0, bottom: 0,
-    borderRadius: radius.pill, backgroundColor: colors.turquoise,
+    borderRadius: radius.pill, backgroundColor: 'rgba(255,255,255,0.90)',
+    shadowColor: '#000', shadowOpacity: 0.22, shadowRadius: 7, shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
   },
   chip: {
     paddingHorizontal: space.md, height: CHIP_H, justifyContent: 'center',
