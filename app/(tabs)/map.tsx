@@ -6,6 +6,10 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 import { useContent } from '../../src/content/ContentProvider'
 import { buildMapHtml, type MapPoint } from '../../src/map/leafletHtml'
+import { OfflineMap } from '../../src/map/OfflineMap'
+import { useOfflinePackages } from '../../src/offline/useOfflinePackages'
+import { packageForPoint } from '../../src/offline/packages'
+import { packageFile } from '../../src/offline/useOfflinePackages'
 import { colors, radius, space, font, fontFamily, shadow } from '../../src/theme/tokens'
 
 export default function MapTab() {
@@ -15,13 +19,21 @@ export default function MapTab() {
   const { flat, flng } = useLocalSearchParams<{ flat?: string; flng?: string }>()
   const ref = useRef<WebView>(null)
   const [mapLoading, setMapLoading] = useState(true)
+  const { manifest, readyIds } = useOfflinePackages()
 
-  const html = useMemo(() => {
-    const points: MapPoint[] = (pack?.data.places ?? []).map((p) => ({
-      lng: p.lng, lat: p.lat, slug: p.slug, title: p.translations[lang].title, city: p.section === 'city',
-    }))
-    return buildMapHtml(points)
-  }, [pack, lang])
+  const points: MapPoint[] = useMemo(() => (pack?.data.places ?? []).map((p) => ({
+    lng: p.lng, lat: p.lat, slug: p.slug, title: p.translations[lang].title, city: p.section === 'city',
+  })), [pack, lang])
+
+  const html = useMemo(() => buildMapHtml(points), [points])
+
+  // Есть скачанный пакет, покрывающий центр региона — рисуем офлайн-карту.
+  // Нет — молча остаёмся на прежней онлайн-карте, пользователь не остаётся с пустым экраном.
+  const offlinePack = useMemo(() => {
+    if (!manifest) return null
+    const focus = flat && flng ? { lat: Number(flat), lng: Number(flng) } : { lat: 52.29, lng: 104.3 }
+    return packageForPoint(manifest.packages, readyIds, focus.lat, focus.lng)
+  }, [manifest, readyIds, flat, flng])
 
   const onMessage = useCallback((e: { nativeEvent: { data: string } }) => {
     const slug = e.nativeEvent.data
@@ -46,6 +58,16 @@ export default function MapTab() {
 
   return (
     <View style={s.wrap}>
+      {offlinePack ? (
+        <OfflineMap
+          file={packageFile(offlinePack.id)}
+          points={points}
+          badge={t('offlineBadge')}
+          onPlacePress={(slug) => router.push(`/place/${slug}`)}
+          onReady={() => setMapLoading(false)}
+          style={s.map}
+        />
+      ) : (
       <WebView
         ref={ref}
         originWhitelist={['*']}
@@ -56,6 +78,7 @@ export default function MapTab() {
         javaScriptEnabled
         domStorageEnabled
       />
+      )}
       {mapLoading && (
         <View style={s.loader} pointerEvents="none">
           <ActivityIndicator color={colors.turquoise} size="large" />
