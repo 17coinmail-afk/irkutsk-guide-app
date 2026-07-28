@@ -30,6 +30,11 @@ export type UiKey =
   | 'offlineMapsTitle' | 'offlineMapsSub' | 'offlineMapsDownload' | 'offlineMapsUpdate'
   | 'offlineMapsDelete' | 'offlineMapsSaved' | 'offlineMapsNote' | 'offlineMapsNoNet' | 'offlineMapsFailed'
   | 'offlineBadge'
+  | 'obTitle1' | 'obText1' | 'obTitle2' | 'obText2' | 'obTitle3' | 'obText3'
+  | 'obNext' | 'obStart' | 'obSkip'
+  | 'cityStoryTitle' | 'cityStorySub' | 'cityStoryNote' | 'minRead'
+  | 'arrNearby' | 'arrNearbyNoGeo' | 'arrTime' | 'arrTime1' | 'arrTime3' | 'arrTime7'
+  | 'arrHowTo' | 'arrAllRoutes' | 'arrEnableGeo'
 
 export const UI: Record<Lang, Record<UiKey, string>> = {
   ru: {
@@ -89,6 +94,19 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     offlineMapsFailed: 'Загрузка не удалась, попробуйте ещё раз',
     offlineMapsNote: 'Качайте по Wi-Fi: файлы большие. После загрузки карта работает полностью без сети — места и маршруты и так хранятся офлайн.',
     offlineBadge: 'офлайн-карта',
+    obTitle1: 'Гид, который работает без сети',
+    obText1: 'Места, маршруты и практика хранятся в телефоне. Интернет нужен один раз, чтобы загрузить гид.',
+    obTitle2: 'Скачайте карту заранее',
+    obText2: 'На Ольхоне и в тайге связи нет. В разделе «Ещё» выберите «Карты офлайн» и загрузите пакет по Wi-Fi.',
+    obTitle3: 'Практика важнее красот',
+    obText3: 'Паромы, маршрутки, погода и лёд, разговорник и экстренные телефоны собраны в разделе «Практика».',
+    obNext: 'Дальше', obStart: 'Начать', obSkip: 'Пропустить',
+    cityStoryTitle: 'История Иркутска', cityStorySub: 'Как острог стал «сибирским Парижем»',
+    cityStoryNote: 'Даты и факты собраны по музейным источникам. Если заметили неточность — напишите нам.',
+    minRead: 'мин чтения',
+    arrNearby: 'Рядом с вами', arrNearbyNoGeo: 'Начните отсюда',
+    arrTime: 'Сколько у вас времени?', arrTime1: '1 день', arrTime3: '2–3 дня', arrTime7: 'Неделя',
+    arrHowTo: 'Как добраться', arrAllRoutes: 'Все маршруты', arrEnableGeo: 'Показать рядом со мной',
   },
   en: {
     tabHome: 'Home', tabPlaces: 'Places', tabRoutes: 'Routes', tabMap: 'Map', tabMore: 'More',
@@ -147,6 +165,19 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     offlineMapsFailed: 'Download failed, please try again',
     offlineMapsNote: 'Use Wi-Fi: the files are large. Once downloaded the map works fully offline — places and routes are stored offline anyway.',
     offlineBadge: 'offline map',
+    obTitle1: 'A guide that works without a signal',
+    obText1: 'Places, routes and practical info live on your phone. You need the internet once, to download the guide.',
+    obTitle2: 'Download the map in advance',
+    obText2: 'There is no signal on Olkhon or in the taiga. Open “More” → “Offline maps” and grab a package over Wi-Fi.',
+    obTitle3: 'Practical matters most',
+    obText3: 'Ferries, minibuses, weather and ice, a phrasebook and emergency numbers are all under “Practical”.',
+    obNext: 'Next', obStart: 'Start', obSkip: 'Skip',
+    cityStoryTitle: 'The story of Irkutsk', cityStorySub: 'How a wooden fort became the “Paris of Siberia”',
+    cityStoryNote: 'Dates and facts follow museum sources. Spotted an error? Write to us.',
+    minRead: 'min read',
+    arrNearby: 'Near you', arrNearbyNoGeo: 'Start here',
+    arrTime: 'How much time do you have?', arrTime1: '1 day', arrTime3: '2–3 days', arrTime7: 'A week',
+    arrHowTo: 'Getting around', arrAllRoutes: 'All routes', arrEnableGeo: 'Show what is near me',
   },
   zh: {
     tabHome: '主页', tabPlaces: '景点', tabRoutes: '路线', tabMap: '地图', tabMore: '更多',
@@ -205,5 +236,18 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     offlineMapsFailed: '下载失败，请重试',
     offlineMapsNote: '建议使用 Wi-Fi：文件较大。下载后地图可完全离线使用——地点与路线本来就已离线保存。',
     offlineBadge: '离线地图',
+    obTitle1: '没有信号也能用的向导',
+    obText1: '地点、路线与实用信息都存在手机里。只需联网一次，下载导览内容。',
+    obTitle2: '请提前下载地图',
+    obText2: '奥尔洪岛与针叶林中没有信号。请在“更多”→“离线地图”中通过 Wi-Fi 下载地图包。',
+    obTitle3: '实用信息最重要',
+    obText3: '轮渡、小巴、天气与冰情、常用语和紧急电话，都在“实用”栏目中。',
+    obNext: '下一步', obStart: '开始', obSkip: '跳过',
+    cityStoryTitle: '伊尔库茨克的历史', cityStorySub: '木堡如何成为“西伯利亚的巴黎”',
+    cityStoryNote: '日期与史实参考博物馆资料。如发现错误，欢迎告知。',
+    minRead: '分钟阅读',
+    arrNearby: '您附近', arrNearbyNoGeo: '从这里开始',
+    arrTime: '您有多少时间？', arrTime1: '1 天', arrTime3: '2–3 天', arrTime7: '一周',
+    arrHowTo: '如何出行', arrAllRoutes: '全部路线', arrEnableGeo: '显示我附近的地点',
   },
 }

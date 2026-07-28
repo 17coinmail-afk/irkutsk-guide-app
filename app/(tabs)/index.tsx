@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Animated, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
 import { Image } from 'expo-image'
 import { Ionicons } from '@expo/vector-icons'
@@ -23,6 +23,9 @@ import { Press } from '../../src/components/Press'
 import { Glass } from '../../src/components/Glass'
 import { TodayBar } from '../../src/components/TodayBar'
 import { ContourBackdrop } from '../../src/components/ContourBackdrop'
+import { nearby, routesForBudget, arrivalRoutes, formatKm, type TimeBudget } from '../../src/lib/arrival'
+import { formatDuration, formatWindow, isRunningOn, MODE_ICON } from '../../src/lib/transport'
+import * as Location from 'expo-location'
 import { useReduceMotion } from '../../src/hooks/useReduceMotion'
 import { placeChipLabel, categoryLabel, themeLabel } from '../../src/i18n/labels'
 import { colors, font, fontFamily, radius, space } from '../../src/theme/tokens'
@@ -49,9 +52,28 @@ export default function HomeTab() {
   const seasonCardWidth = (screenWidth - space.md * 2 - space.sm) / 2
 
   const [heroLoaded, setHeroLoaded] = useState(false)
+  const [me, setMe] = useState<{ lat: number; lng: number } | null>(null)
+  const [budget, setBudget] = useState<TimeBudget>('1')
+
+  // Геопозиция запрашивается один раз и только для блока «рядом»: без неё считаем от центра города.
+  useEffect(() => {
+    let alive = true
+    ;(async () => {
+      try {
+        const { status } = await Location.getForegroundPermissionsAsync()
+        if (status !== 'granted') return
+        const pos = await Location.getCurrentPositionAsync({})
+        if (alive) setMe({ lat: pos.coords.latitude, lng: pos.coords.longitude })
+      } catch {}
+    })()
+    return () => { alive = false }
+  }, [])
   const scrollY = useRef(new Animated.Value(0)).current
 
   const sections = useMemo(() => homeSections(pack), [pack])
+  const nearbyItems = useMemo(() => nearby(pack?.data.places ?? [], me), [pack, me])
+  const budgetRoutes = useMemo(() => routesForBudget(pack?.data.routes ?? [], budget), [pack, budget])
+  const arrivals = useMemo(() => arrivalRoutes(pack?.data.transport ?? [], new Date()), [pack])
   const byId = useMemo(() => placesById(pack?.data.places ?? []), [pack])
 
   const tripPlaces = useMemo(() => (pack?.data.places ?? []).filter((p) => favs.has(`place:${p.slug}`)), [pack, favs])
@@ -113,6 +135,90 @@ export default function HomeTab() {
       </View>
 
       <View style={s.todayWrap}><TodayBar /></View>
+
+      {nearbyItems.length > 0 && (
+        <FadeInUp delay={40} style={s.section}>
+          <SectionHeader title={me ? t('arrNearby') : t('arrNearbyNoGeo')} />
+          <View style={s.nearList}>
+            {nearbyItems.map((item) => (
+              <Press
+                key={item.place.id}
+                onPress={() => router.push(`/place/${item.place.slug}`)}
+                haptic="light"
+              >
+                <Glass edge="top" density="thin" style={s.nearRow}>
+                  <Image source={item.place.photoUrl} style={s.nearThumb} contentFit="cover" cachePolicy="memory-disk" transition={200} />
+                  <View style={s.nearCol}>
+                    <Text style={s.nearTitle} numberOfLines={1}>{item.place.translations[lang].title}</Text>
+                    <Text style={s.nearMeta} numberOfLines={1}>
+                      {placeChipLabel(item.place, lang)} · {formatKm(item.km, lang)}
+                    </Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={16} color={colors.textDim} />
+                </Glass>
+              </Press>
+            ))}
+          </View>
+        </FadeInUp>
+      )}
+
+      {budgetRoutes.length > 0 && (
+        <FadeInUp delay={70} style={s.section}>
+          <SectionHeader title={t('arrTime')} seeAllLabel={t('arrAllRoutes')} onSeeAll={() => router.push('/routes')} />
+          <View style={s.budgetRow}>
+            {(['1', '3', '7'] as TimeBudget[]).map((b) => (
+              <Press key={b} onPress={() => setBudget(b)} haptic="selection">
+                <View style={[s.budgetChip, budget === b && s.budgetChipOn]}>
+                  <Text style={[s.budgetTxt, budget === b && s.budgetTxtOn]}>
+                    {t(b === '1' ? 'arrTime1' : b === '3' ? 'arrTime3' : 'arrTime7')}
+                  </Text>
+                </View>
+              </Press>
+            ))}
+          </View>
+          <Carousel
+            data={budgetRoutes}
+            keyExtractor={(r) => r.id}
+            renderItem={({ item }) => (
+              <PhotoCard
+                width={176}
+                size="compact"
+                photoUrl={routeCoverPhoto(item, byId)}
+                title={item.translations[lang].title}
+                chip={themeLabel(item.theme, lang) || undefined}
+                badge={{ value: item.days, label: dayWord(item.days, lang) }}
+                fav={{ kind: 'route', slug: item.slug }}
+                onPress={() => router.push(`/route/${item.slug}`)}
+              />
+            )}
+          />
+        </FadeInUp>
+      )}
+
+      {arrivals.length > 0 && (
+        <FadeInUp delay={90} style={s.section}>
+          <SectionHeader title={t('arrHowTo')} seeAllLabel={t('filterAll')} onSeeAll={() => router.push('/practical/transport')} />
+          <View style={s.nearList}>
+            {arrivals.map((link) => (
+              <Press key={link.id} onPress={() => router.push('/practical/transport')} haptic="light">
+                <Glass edge="top" density="thin" style={s.arrRow}>
+                  <Ionicons
+                    name={MODE_ICON[link.mode] as never}
+                    size={18}
+                    color={isRunningOn(link, new Date()) ? colors.turquoise : colors.textDim}
+                  />
+                  <View style={s.nearCol}>
+                    <Text style={s.nearTitle} numberOfLines={1}>{link.translations[lang].title}</Text>
+                    <Text style={s.nearMeta} numberOfLines={1}>
+                      {formatDuration(link.durationMin, lang)} · {formatWindow(link, lang)}
+                    </Text>
+                  </View>
+                </Glass>
+              </Press>
+            ))}
+          </View>
+        </FadeInUp>
+      )}
 
       <FadeInUp delay={60}>
         <View style={s.statWrap}>
@@ -238,6 +344,25 @@ export default function HomeTab() {
         </FadeInUp>
       )}
 
+      <FadeInUp delay={300} style={s.section}>
+        <Press onPress={() => router.push('/city-story')} haptic="light">
+          <View style={s.storyCard}>
+            <Image
+              source="https://guide.getastrodaily.com/assets/img/irk-kvartal.jpg"
+              style={StyleSheet.absoluteFill}
+              contentFit="cover"
+              cachePolicy="memory-disk"
+              transition={280}
+            />
+            <GradientOverlay variant="photo" />
+            <View style={s.storyBody}>
+              <Text style={s.storyEyebrow}>{t('cityStorySub')}</Text>
+              <Text style={s.storyTitle}>{t('cityStoryTitle')}</Text>
+            </View>
+          </View>
+        </Press>
+      </FadeInUp>
+
       {hasTrip && (
         <FadeInUp delay={320} style={[s.section, s.lastSection]}>
           <SectionHeader title={t('secTrip')} seeAllLabel={t('filterAll')} onSeeAll={() => router.push('/trip')} />
@@ -295,6 +420,38 @@ const s = StyleSheet.create({
   todayWrap: { marginTop: -space.lg, marginBottom: space.smd, zIndex: 2 },
   statWrap: { marginBottom: space.md, overflow: 'hidden' },
   section: { marginTop: space.xl },
+  nearList: { paddingHorizontal: space.md, gap: space.sm },
+  nearRow: {
+    flexDirection: 'row', alignItems: 'center', gap: space.smd, padding: space.sm,
+    borderRadius: radius.card, borderWidth: StyleSheet.hairlineWidth, borderColor: 'rgba(255,255,255,0.10)',
+  },
+  arrRow: {
+    flexDirection: 'row', alignItems: 'center', gap: space.smd,
+    paddingHorizontal: space.md, paddingVertical: space.smd,
+    borderRadius: radius.card, borderWidth: StyleSheet.hairlineWidth, borderColor: 'rgba(255,255,255,0.10)',
+  },
+  nearThumb: { width: 54, height: 54, borderRadius: radius.md, backgroundColor: colors.surfaceAlt },
+  nearCol: { flex: 1, gap: 2 },
+  nearTitle: { color: colors.text, fontFamily: fontFamily.bodyBold, fontSize: font.scale.body },
+  nearMeta: { color: colors.textMuted, fontFamily: fontFamily.body, fontSize: font.scale.small },
+  budgetRow: { flexDirection: 'row', gap: space.sm, paddingHorizontal: space.md, paddingBottom: space.sm },
+  budgetChip: {
+    paddingHorizontal: space.md, paddingVertical: 9, borderRadius: radius.pill,
+    borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface,
+  },
+  budgetChipOn: { backgroundColor: 'rgba(255,255,255,0.90)', borderColor: 'transparent' },
+  budgetTxt: { color: colors.textMuted, fontFamily: fontFamily.bodyMedium, fontSize: font.scale.small },
+  budgetTxtOn: { color: colors.bg, fontFamily: fontFamily.bodyBold },
+  storyCard: {
+    marginHorizontal: space.md, height: 150, borderRadius: radius.photo,
+    overflow: 'hidden', backgroundColor: colors.surfaceAlt, justifyContent: 'flex-end',
+  },
+  storyBody: { padding: space.md, gap: 2 },
+  storyEyebrow: {
+    color: colors.gold, fontFamily: fontFamily.bodyBold, fontSize: font.scale.chip,
+    textTransform: 'uppercase', letterSpacing: 1.2,
+  },
+  storyTitle: { color: colors.text, fontFamily: fontFamily.heading, fontSize: font.scale.h2 },
   lastSection: { marginBottom: space.md },
   seasonRow: { flexDirection: 'row', gap: space.sm, paddingHorizontal: space.md },
   quickRow: { gap: space.sm, paddingHorizontal: space.md, paddingTop: space.xs },
