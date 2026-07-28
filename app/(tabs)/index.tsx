@@ -363,6 +363,19 @@ export default function HomeTab() {
         </Press>
       </FadeInUp>
 
+      <FadeInUp delay={320} style={s.section}>
+        <Press onPress={() => router.push('/people')} haptic="light">
+          <Glass edge="top" density="thin" style={s.peopleRow}>
+            <Ionicons name="people-outline" size={20} color={colors.gold} />
+            <View style={s.nearCol}>
+              <Text style={s.nearTitle}>{t('peopleTitle')}</Text>
+              <Text style={s.nearMeta} numberOfLines={1}>{t('peopleSub')}</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color={colors.textDim} />
+          </Glass>
+        </Press>
+      </FadeInUp>
+
       {hasTrip && (
         <FadeInUp delay={320} style={[s.section, s.lastSection]}>
           <SectionHeader title={t('secTrip')} seeAllLabel={t('filterAll')} onSeeAll={() => router.push('/trip')} />
@@ -442,6 +455,11 @@ const s = StyleSheet.create({
   budgetChipOn: { backgroundColor: 'rgba(255,255,255,0.90)', borderColor: 'transparent' },
   budgetTxt: { color: colors.textMuted, fontFamily: fontFamily.bodyMedium, fontSize: font.scale.small },
   budgetTxtOn: { color: colors.bg, fontFamily: fontFamily.bodyBold },
+  peopleRow: {
+    flexDirection: 'row', alignItems: 'center', gap: space.smd,
+    marginHorizontal: space.md, paddingHorizontal: space.md, paddingVertical: space.smd,
+    borderRadius: radius.card, borderWidth: StyleSheet.hairlineWidth, borderColor: 'rgba(255,255,255,0.10)',
+  },
   storyCard: {
     marginHorizontal: space.md, height: 150, borderRadius: radius.photo,
     overflow: 'hidden', backgroundColor: colors.surfaceAlt, justifyContent: 'flex-end',

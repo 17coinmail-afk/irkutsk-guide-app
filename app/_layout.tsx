@@ -45,6 +45,7 @@ export default function RootLayout() {
             <Stack.Screen name="assistant" />
             <Stack.Screen name="offline-maps" />
             <Stack.Screen name="city-story" />
+            <Stack.Screen name="people" />
             <Stack.Screen name="onboarding" options={{ gestureEnabled: false }} />
             <Stack.Screen name="offline-first-run" />
           </Stack>
