@@ -98,7 +98,7 @@ export default function HomeTab() {
           haptic="light"
           style={s.heroPress}
         >
-          <View style={s.heroContent}>
+          <Glass edge="top" density="regular" style={s.heroGlass}>
             <Text style={s.eyebrow}>{t('homeEyebrow')}</Text>
             <Text style={s.heroTitle} numberOfLines={2}>
               {sections.hero ? sections.hero.translations[lang].title : t('homeTitle')}
@@ -108,7 +108,7 @@ export default function HomeTab() {
                 ? categoryLabel(sections.hero.category, lang).toUpperCase()
                 : t('homeSubtitle')}
             </Text>
-          </View>
+          </Glass>
         </Press>
       </View>
 
@@ -117,7 +117,9 @@ export default function HomeTab() {
       <FadeInUp delay={60}>
         <View style={s.statWrap}>
           <ContourBackdrop height={200} opacity={0.1} />
-          <StatBand stats={stats} />
+          <Glass edge="top" density="thin" style={s.statGlass}>
+            <StatBand stats={stats} />
+          </Glass>
         </View>
       </FadeInUp>
 
@@ -126,7 +128,7 @@ export default function HomeTab() {
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.quickRow}>
           {QUICK.map((q) => (
             <Press key={q.route} onPress={() => router.push(q.route as never)} haptic="light">
-              <Glass edge="none" style={s.quickPill}>
+              <Glass edge="top" density="thin" style={s.quickPill}>
                 <Ionicons name={q.icon as never} size={18} color={q.c} />
                 <Text style={s.quickLabel} numberOfLines={1}>{t(q.label)}</Text>
               </Glass>
@@ -278,6 +280,14 @@ const s = StyleSheet.create({
   content: { paddingBottom: space.xl },
   hero: { width: '100%', overflow: 'hidden', backgroundColor: colors.surfaceAlt, justifyContent: 'flex-end' },
   heroPress: { position: 'absolute', left: 0, right: 0, bottom: 0 },
+  heroGlass: {
+    margin: space.smd, marginBottom: space.md, padding: space.md,
+    borderRadius: radius.sheet, borderWidth: StyleSheet.hairlineWidth, borderColor: 'rgba(255,255,255,0.16)',
+  },
+  statGlass: {
+    marginHorizontal: space.md, borderRadius: radius.card,
+    borderWidth: StyleSheet.hairlineWidth, borderColor: 'rgba(255,255,255,0.12)',
+  },
   heroContent: { padding: space.lg, paddingBottom: space.lg },
   eyebrow: { color: colors.turquoise, fontFamily: fontFamily.bodyBold, fontSize: font.scale.chip, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: space.sm },
   heroTitle: { color: colors.text, fontFamily: fontFamily.headingBlack, fontSize: font.scale.hero, lineHeight: font.scale.hero * 1.08 },

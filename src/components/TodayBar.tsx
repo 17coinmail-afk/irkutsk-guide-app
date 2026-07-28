@@ -47,7 +47,7 @@ export function TodayBar() {
 
   return (
     <Press onPress={() => router.push('/practical/weather')} haptic="light" style={s.wrap}>
-      <Glass edge="none" style={s.bar} intensity={50}>
+      <Glass edge="top" density="regular" tone={ice.state === 'solid' ? 'cold' : 'warm'} style={s.bar}>
         <View style={s.cell}>
           <Ionicons name={info.icon as never} size={18} color={colors.turquoise} />
           <Text style={s.temp}>{Math.round(weather.temp)}°</Text>

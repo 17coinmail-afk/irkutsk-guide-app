@@ -9,7 +9,7 @@ import { SPRING } from '../lib/motion'
 import { useReduceMotion } from '../hooks/useReduceMotion'
 import { colors, fontFamily, radius, space } from '../theme/tokens'
 
-const PILL_INSET = 8
+const PILL_INSET = 3
 const BAR_HEIGHT = 58
 
 /** Нижняя навигация: стекло + «таблетка», которая переезжает под активную вкладку. */
@@ -28,7 +28,7 @@ export function GlassTabBar({ state, descriptors, navigation }: BottomTabBarProp
   }, [state.index, cell, x, reduceMotion])
 
   return (
-    <Glass edge="top" style={[s.bar, { paddingBottom: insets.bottom }]}>
+    <Glass edge="top" density="dense" style={[s.bar, { paddingBottom: insets.bottom }]}>
       <Animated.View
         pointerEvents="none"
         style={[
@@ -40,7 +40,7 @@ export function GlassTabBar({ state, descriptors, navigation }: BottomTabBarProp
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key]
           const focused = state.index === index
-          const color = focused ? colors.turquoise : colors.textMuted
+          const color = focused ? colors.bg : colors.textMuted
           const label = typeof options.title === 'string' ? options.title : route.name
 
           const onPress = () => {
@@ -59,7 +59,7 @@ export function GlassTabBar({ state, descriptors, navigation }: BottomTabBarProp
               style={s.cell}
             >
               {options.tabBarIcon?.({ focused, color, size: 22 })}
-              <Text style={[s.label, { color }]} numberOfLines={1}>{label}</Text>
+              <Text style={[s.label, { color }, focused && s.labelActive]} numberOfLines={1}>{label}</Text>
             </Pressable>
           )
         })}
@@ -71,16 +71,18 @@ export function GlassTabBar({ state, descriptors, navigation }: BottomTabBarProp
 const s = StyleSheet.create({
   bar: { position: 'relative' },
   row: { flexDirection: 'row', height: BAR_HEIGHT, alignItems: 'center' },
-  cell: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 3 },
-  label: { fontFamily: fontFamily.bodyMedium, fontSize: 10, letterSpacing: 0.2 },
+  cell: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 2, paddingHorizontal: 2 },
+  label: { fontFamily: fontFamily.bodyMedium, fontSize: 9, letterSpacing: 0 },
+  labelActive: { fontFamily: fontFamily.bodyBold },
   pill: {
     position: 'absolute',
     top: 6,
     height: BAR_HEIGHT - 12,
     borderRadius: radius.pill,
-    backgroundColor: 'rgba(63,208,201,0.10)',
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: 'rgba(63,208,201,0.22)',
+    // Активная вкладка — не подсветка, а более плотный слой того же материала.
+    backgroundColor: 'rgba(255,255,255,0.90)',
+    shadowColor: '#000', shadowOpacity: 0.25, shadowRadius: 8, shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
   },
 })
 
