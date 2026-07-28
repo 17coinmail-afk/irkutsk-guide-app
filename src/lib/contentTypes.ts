@@ -11,4 +11,21 @@ export interface Route {
   id: string; slug: string; days: number; theme: string | null; difficulty: string
   translations: Record<Lang, Tr>; stops: Stop[]
 }
-export interface ContentPack { version: number; createdAt?: string; data: { places: Place[]; routes: Route[] } }
+export type TransportMode = 'ferry' | 'shuttle' | 'bus' | 'train' | 'kbzh' | 'boat' | 'ice_road' | 'taxi'
+export interface TransportTr { title: string; frequency: string; note: string | null }
+/** Сообщение между точками: окна отправления и сезонность, а не точное расписание. */
+export interface TransportLink {
+  id: string; slug: string; mode: TransportMode
+  fromSlug: string | null; toSlug: string | null
+  boardLat: number | null; boardLng: number | null
+  durationMin: number; priceFrom: number | null
+  firstDeparture: string | null; lastDeparture: string | null
+  months: number[]
+  sourceUrl: string; checkedAt: string
+  translations: Record<Lang, TransportTr>
+}
+export interface ContentPack {
+  version: number
+  createdAt?: string
+  data: { places: Place[]; routes: Route[]; transport?: TransportLink[] }
+}

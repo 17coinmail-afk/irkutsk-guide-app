@@ -34,6 +34,8 @@ export default function RootLayout() {
             <Stack.Screen name="route/[slug]" />
             <Stack.Screen name="practical/index" />
             <Stack.Screen name="practical/getting-there" />
+
+            <Stack.Screen name="practical/transport" />
             <Stack.Screen name="practical/phrasebook" />
             <Stack.Screen name="practical/weather" />
             <Stack.Screen name="practical/emergency" />

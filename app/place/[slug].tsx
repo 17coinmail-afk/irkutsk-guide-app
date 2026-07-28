@@ -19,6 +19,8 @@ import { Shimmer } from '../../src/components/Shimmer'
 import { Glass } from '../../src/components/Glass'
 import { placeChipLabel } from '../../src/i18n/labels'
 import { routeWord } from '../../src/lib/routeWord'
+import { linksToPlace, pickSeasonal, isRunningOn, formatWindow, formatDuration, MODE_ICON } from '../../src/lib/transport'
+import { appUrl, webUrl, MAP_APPS } from '../../src/lib/externalMaps'
 import { useReduceMotion } from '../../src/hooks/useReduceMotion'
 import { colors, space, font, fontFamily, radius } from '../../src/theme/tokens'
 
@@ -62,6 +64,9 @@ export default function PlaceDetail() {
   if (inRoutes > 0) {
     facts.push({ icon: 'map-outline', text: `${inRoutes} ${routeWord(inRoutes, lang)}` })
   }
+
+  // Варианты добраться именно до этого места: сначала те, что работают в текущем сезоне.
+  const arrivals = pickSeasonal(linksToPlace(pack?.data.transport ?? [], place.slug), new Date())
 
   const story = tr.story ? withDropCap(tr.story) : null
   const tips = tr.tips ? tr.tips.split(/(?<=[.;])\s+/).filter((x) => x.trim().length > 0) : []
@@ -114,6 +119,32 @@ export default function PlaceDetail() {
             </ScrollView>
           ) : null}
 
+          {arrivals.length > 0 ? (
+            <View style={s.tipsCard}>
+              <View style={s.storyHead}>
+                <Ionicons name="navigate-circle-outline" size={16} color={colors.turquoise} />
+                <Text style={s.tipsEyebrow}>{t('trHowToGet')}</Text>
+              </View>
+              {arrivals.slice(0, 3).map((link) => {
+                const running = isRunningOn(link, new Date())
+                return (
+                  <View key={link.id} style={[s.arrivalRow, !running && s.arrivalResting]}>
+                    <Ionicons name={MODE_ICON[link.mode] as never} size={16} color={running ? colors.turquoise : colors.textDim} style={s.tipIcon} />
+                    <View style={s.arrivalCol}>
+                      <Text style={s.arrivalTitle}>{link.translations[lang].title}</Text>
+                      <Text style={s.arrivalMeta}>
+                        {formatDuration(link.durationMin, lang)} · {formatWindow(link, lang)}
+                      </Text>
+                    </View>
+                  </View>
+                )
+              })}
+              <Press onPress={() => router.push('/practical/transport')} haptic="light">
+                <Text style={s.arrivalMore}>{t('modTransport')} →</Text>
+              </Press>
+            </View>
+          ) : null}
+
           {story ? (
             <GlowCard tone="gold" contentStyle={s.storyInner}>
               <View style={s.storyHead}>
@@ -159,12 +190,23 @@ export default function PlaceDetail() {
                 </View>
               </Press>
             ) : null}
-            <Press onPress={() => Linking.openURL(geo)} haptic="light">
-              <View style={s.secondaryBtn}>
-                <Ionicons name="map-outline" size={18} color={colors.text} />
-                <Text style={s.secondaryTxt}>{t('openInMaps')}</Text>
-              </View>
-            </Press>
+            {MAP_APPS.map((app) => (
+              <Press
+                key={app.id}
+                haptic="light"
+                onPress={async () => {
+                  const target = { lat: place.lat, lng: place.lng, title: tr.title }
+                  const deep = appUrl(app.id, target)
+                  const canOpen = await Linking.canOpenURL(deep).catch(() => false)
+                  Linking.openURL(canOpen ? deep : webUrl(app.id, target))
+                }}
+              >
+                <View style={s.secondaryBtn}>
+                  <Ionicons name="navigate-outline" size={18} color={colors.text} />
+                  <Text style={s.secondaryTxt}>{app.label}</Text>
+                </View>
+              </Press>
+            ))}
           </View>
         </FadeInUp>
       </Animated.ScrollView>
@@ -215,6 +257,12 @@ const s = StyleSheet.create({
   tipRow: { flexDirection: 'row', gap: space.sm, alignItems: 'flex-start' },
   tipIcon: { marginTop: 3 },
   tipTxt: { color: colors.text, fontFamily: fontFamily.body, fontSize: font.scale.body, lineHeight: 22, flex: 1 },
+  arrivalRow: { flexDirection: 'row', gap: space.sm, alignItems: 'flex-start' },
+  arrivalResting: { opacity: 0.55 },
+  arrivalCol: { flex: 1, gap: 1 },
+  arrivalTitle: { color: colors.text, fontFamily: fontFamily.bodyMedium, fontSize: font.scale.body },
+  arrivalMeta: { color: colors.textMuted, fontFamily: fontFamily.body, fontSize: font.scale.small },
+  arrivalMore: { color: colors.turquoise, fontFamily: fontFamily.bodyBold, fontSize: font.scale.small, paddingTop: space.xs },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm },
   secondaryBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: radius.pill, paddingHorizontal: space.md, paddingVertical: space.sm },
   secondaryTxt: { color: colors.text, fontFamily: fontFamily.bodyMedium, fontSize: font.scale.body },

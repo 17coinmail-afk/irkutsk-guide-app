@@ -15,6 +15,7 @@ function tint(hex: string, a: number) {
 
 const MODULES: { route: string; icon: string; title: UiKey; sub: UiKey; c: string }[] = [
   { route: '/practical/getting-there', icon: 'bus-outline', title: 'modGetThere', sub: 'modGetThereSub', c: colors.turquoise },
+  { route: '/practical/transport', icon: 'boat-outline', title: 'modTransport', sub: 'modTransportSub', c: colors.turquoise },
   { route: '/practical/phrasebook', icon: 'language-outline', title: 'modPhrasebook', sub: 'modPhrasebookSub', c: colors.gold },
   { route: '/practical/weather', icon: 'partly-sunny-outline', title: 'modWeather', sub: 'modWeatherSub', c: colors.turquoise },
   { route: '/practical/cuisine', icon: 'restaurant-outline', title: 'modCuisine', sub: 'modCuisineSub', c: colors.gold },

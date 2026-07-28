@@ -23,6 +23,10 @@ export type UiKey =
   | 'storyTitle'
   | 'modCuisine' | 'modCuisineSub' | 'modSouvenirs' | 'modSouvenirsSub'
   | 'modEvents' | 'modEventsSub' | 'datesNote' | 'tipsTitle'
+  | 'modTransport' | 'modTransportSub'
+  | 'trGroupOlkhon' | 'trGroupListvyanka' | 'trGroupRail' | 'trGroupCity'
+  | 'trOffSeason' | 'trFree' | 'trFrom' | 'trStale' | 'trSource' | 'trDisclaimer'
+  | 'trHowToGet' | 'trOpenIn' | 'trRouteBtn'
 
 export const UI: Record<Lang, Record<UiKey, string>> = {
   ru: {
@@ -68,6 +72,14 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     modEvents: 'События года', modEventsSub: 'Фестивали и праздники по сезонам',
     datesNote: 'Даты уточняйте перед поездкой',
     tipsTitle: 'Как добраться и когда ехать',
+    modTransport: 'Транспорт', modTransportSub: 'Паромы, маршрутки, электрички и КБЖД — с сезонами',
+    trGroupOlkhon: 'На Ольхон', trGroupListvyanka: 'В Листвянку', trGroupRail: 'Поездом', trGroupCity: 'По городу',
+    trOffSeason: 'Сейчас не ходит — другой сезон',
+    trFree: 'бесплатно', trFrom: 'от',
+    trStale: 'Данные могли устареть — сверьтесь с источником',
+    trSource: 'Источник, проверено',
+    trDisclaimer: 'Расписания меняются каждый сезон. Мы показываем окна отправления и частоту, а точное время уточняйте у перевозчика по ссылке.',
+    trHowToGet: 'Транспорт до места', trOpenIn: 'Открыть в картах', trRouteBtn: 'Маршрут',
   },
   en: {
     tabHome: 'Home', tabPlaces: 'Places', tabRoutes: 'Routes', tabMap: 'Map', tabMore: 'More',
@@ -112,6 +124,14 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     modEvents: 'Year’s events', modEventsSub: 'Festivals and holidays by season',
     datesNote: 'Check the dates before your trip',
     tipsTitle: 'Getting there & when to go',
+    modTransport: 'Transport', modTransportSub: 'Ferries, minibuses, trains and the Circum-Baikal — by season',
+    trGroupOlkhon: 'To Olkhon', trGroupListvyanka: 'To Listvyanka', trGroupRail: 'By rail', trGroupCity: 'Around town',
+    trOffSeason: 'Not running now — different season',
+    trFree: 'free', trFrom: 'from',
+    trStale: 'Data may be outdated — check the source',
+    trSource: 'Source, checked',
+    trDisclaimer: 'Timetables change every season. We show departure windows and frequency; confirm exact times with the operator via the link.',
+    trHowToGet: 'Transport to here', trOpenIn: 'Open in maps', trRouteBtn: 'Directions',
   },
   zh: {
     tabHome: '主页', tabPlaces: '景点', tabRoutes: '路线', tabMap: '地图', tabMore: '更多',
@@ -156,5 +176,13 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     modEvents: '年度活动', modEventsSub: '各季节的节庆与活动',
     datesNote: '出行前请确认日期',
     tipsTitle: '如何前往与何时出行',
+    modTransport: '交通', modTransportSub: '轮渡、小巴、火车与环贝加尔铁路，按季节',
+    trGroupOlkhon: '前往奥尔洪', trGroupListvyanka: '前往利斯特维扬卡', trGroupRail: '铁路', trGroupCity: '市内',
+    trOffSeason: '当前停运——非当季',
+    trFree: '免费', trFrom: '起',
+    trStale: '数据可能过时，请核对来源',
+    trSource: '来源，核查于',
+    trDisclaimer: '时刻表每季变动。我们提供发车时段与班次频率，确切时间请通过链接向承运方确认。',
+    trHowToGet: '到这里的交通', trOpenIn: '在地图中打开', trRouteBtn: '路线',
   },
 }
