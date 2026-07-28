@@ -29,6 +29,14 @@ export default function MoreTab() {
           </View>
           <Ionicons name="chevron-forward" size={20} color={colors.textDim} />
         </Pressable>
+        <Pressable style={s.practical} onPress={() => router.push('/offline-maps')}>
+          <View style={s.practicalIcon}><Ionicons name="cloud-download-outline" size={24} color={colors.gold} /></View>
+          <View style={{ flex: 1 }}>
+            <Text style={s.practicalTitle}>{t('offlineMapsTitle')}</Text>
+            <Text style={s.practicalSub} numberOfLines={2}>{t('offlineMapsSub')}</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={colors.textDim} />
+        </Pressable>
         <Text style={s.h}>{t('language')}</Text>
         <View style={s.langRow}>
           {LANGS.map((l) => (

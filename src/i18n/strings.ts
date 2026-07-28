@@ -27,6 +27,9 @@ export type UiKey =
   | 'trGroupOlkhon' | 'trGroupListvyanka' | 'trGroupRail' | 'trGroupCity'
   | 'trOffSeason' | 'trFree' | 'trFrom' | 'trStale' | 'trSource' | 'trDisclaimer'
   | 'trHowToGet' | 'trOpenIn' | 'trRouteBtn'
+  | 'offlineMapsTitle' | 'offlineMapsSub' | 'offlineMapsDownload' | 'offlineMapsUpdate'
+  | 'offlineMapsDelete' | 'offlineMapsSaved' | 'offlineMapsNote' | 'offlineMapsNoNet' | 'offlineMapsFailed'
+  | 'offlineBadge'
 
 export const UI: Record<Lang, Record<UiKey, string>> = {
   ru: {
@@ -80,6 +83,12 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     trSource: 'Источник, проверено',
     trDisclaimer: 'Расписания меняются каждый сезон. Мы показываем окна отправления и частоту, а точное время уточняйте у перевозчика по ссылке.',
     trHowToGet: 'Транспорт до места', trOpenIn: 'Открыть в картах', trRouteBtn: 'Маршрут',
+    offlineMapsTitle: 'Карты офлайн', offlineMapsSub: 'Скачайте заранее — на Ольхоне и в тайге связи нет',
+    offlineMapsDownload: 'Скачать', offlineMapsUpdate: 'Обновить', offlineMapsDelete: 'Удалить',
+    offlineMapsSaved: 'сохранено', offlineMapsNoNet: 'Не удалось получить список карт — нужен интернет',
+    offlineMapsFailed: 'Загрузка не удалась, попробуйте ещё раз',
+    offlineMapsNote: 'Качайте по Wi-Fi: файлы большие. После загрузки карта работает полностью без сети — места и маршруты и так хранятся офлайн.',
+    offlineBadge: 'офлайн-карта',
   },
   en: {
     tabHome: 'Home', tabPlaces: 'Places', tabRoutes: 'Routes', tabMap: 'Map', tabMore: 'More',
@@ -132,6 +141,12 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     trSource: 'Source, checked',
     trDisclaimer: 'Timetables change every season. We show departure windows and frequency; confirm exact times with the operator via the link.',
     trHowToGet: 'Transport to here', trOpenIn: 'Open in maps', trRouteBtn: 'Directions',
+    offlineMapsTitle: 'Offline maps', offlineMapsSub: 'Download ahead — there is no signal on Olkhon or in the taiga',
+    offlineMapsDownload: 'Download', offlineMapsUpdate: 'Update', offlineMapsDelete: 'Delete',
+    offlineMapsSaved: 'saved', offlineMapsNoNet: 'Could not load the map list — internet required',
+    offlineMapsFailed: 'Download failed, please try again',
+    offlineMapsNote: 'Use Wi-Fi: the files are large. Once downloaded the map works fully offline — places and routes are stored offline anyway.',
+    offlineBadge: 'offline map',
   },
   zh: {
     tabHome: '主页', tabPlaces: '景点', tabRoutes: '路线', tabMap: '地图', tabMore: '更多',
@@ -184,5 +199,11 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     trSource: '来源，核查于',
     trDisclaimer: '时刻表每季变动。我们提供发车时段与班次频率，确切时间请通过链接向承运方确认。',
     trHowToGet: '到这里的交通', trOpenIn: '在地图中打开', trRouteBtn: '路线',
+    offlineMapsTitle: '离线地图', offlineMapsSub: '请提前下载——奥尔洪岛与针叶林中没有信号',
+    offlineMapsDownload: '下载', offlineMapsUpdate: '更新', offlineMapsDelete: '删除',
+    offlineMapsSaved: '已保存', offlineMapsNoNet: '无法获取地图列表——需要联网',
+    offlineMapsFailed: '下载失败，请重试',
+    offlineMapsNote: '建议使用 Wi-Fi：文件较大。下载后地图可完全离线使用——地点与路线本来就已离线保存。',
+    offlineBadge: '离线地图',
   },
 }
