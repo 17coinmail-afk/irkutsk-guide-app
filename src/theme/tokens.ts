@@ -1,27 +1,35 @@
-// Роли цвета (редизайн v3): бирюза — ТОЛЬКО интерактив (активная вкладка/чип, ссылка),
-// золото — ТОЛЬКО смысловой акцент (истории, «в поездку»). Фон глубже, поверхности двух уровней.
+// Палитра v4 «почти монохром»: цвета нет вообще, роли держатся на контрасте.
+// turquoise → белый лёд: ТОЛЬКО интерактив (активная вкладка/чип, ссылка).
+// gold → холодная сталь: ТОЛЬКО смысловой акцент (истории, «в поездку»).
+// Имена ключей сохранены намеренно — по ним расставлены роли во всех экранах.
 export const colors = {
-  bg: '#070c12',          // abyss
-  surface: '#111a23',
-  surfaceAlt: '#17232e',
-  turquoise: '#3fd0c9',   // акцент-бирюза
-  gold: '#e2b857',        // золото деталей
-  text: '#eaf2f5',
-  textMuted: '#9fb3bd',
-  textDim: '#6b8290',
-  border: '#22323f',
-  borderSoft: '#1a2732',
-  danger: '#e2685a',
+  bg: '#06080a',          // почти чёрный с холодным уклоном
+  surface: '#0c0f13',
+  surfaceAlt: '#12161b',
+  // Акцент интерактива — сам белый: в монохроме цвет не выделяет, выделяет контраст.
+  turquoise: '#e8eef4',
+  // Смысловой акцент (истории, «в поездку») — холодная сталь, тише белого.
+  gold: '#a9bccd',
+  text: '#f2f5f8',
+  textMuted: '#b9c2cb',
+  textDim: '#727b85',
+  border: '#171c22',
+  borderSoft: '#11151a',
+  // Опасность остаётся различимой: это про лёд и безопасность, приглушать нельзя.
+  danger: '#d9736a',
 } as const
 export const space = { xs: 4, sm: 8, smd: 12, md: 16, lg: 24, xl: 40 } as const
 export const radius = { sm: 8, md: 14, card: 18, lg: 22, photo: 22, sheet: 28, pill: 999 } as const
 
 // Шрифт-семейства: подключаются через useFonts (@expo-google-fonts) в app/_layout.tsx.
-// Playfair Display — заголовки/герой (serif, дорого). Manrope — текст/чипы/подписи.
+// Cormorant Garamond — заголовки/герой: тонкий контрастный serif с кириллицей.
+// Playfair — только цифры: у Cormorant минускульные, в статистике они проваливаются.
+// Manrope — текст/чипы/подписи.
 export const fontFamily = {
-  heading: 'PlayfairDisplay_700Bold',
-  headingBlack: 'PlayfairDisplay_800ExtraBold',
-  headingRegular: 'PlayfairDisplay_400Regular',
+  heading: 'CormorantGaramond_600SemiBold',
+  headingBlack: 'CormorantGaramond_700Bold',
+  headingRegular: 'CormorantGaramond_400Regular',
+  numeral: 'PlayfairDisplay_700Bold',
   body: 'Manrope_400Regular',
   bodyMedium: 'Manrope_600SemiBold',
   bodyBold: 'Manrope_700Bold',
@@ -32,7 +40,7 @@ export const font = {
   sizes: { xs: 12, sm: 14, md: 16, lg: 20, xl: 28, xxl: 34 },
   weight: { regular: '400', medium: '600', bold: '700' },
   // шкала редизайна v3: контраст крупнее, eyebrow мельче (капс + трекинг компенсируют)
-  scale: { chip: 11, small: 13, body: 15, bodyLg: 16, h2: 20, h1: 28, hero: 40 },
+  scale: { chip: 11, small: 13, body: 15, bodyLg: 16, h2: 22, h1: 32, hero: 46 },
   family: fontFamily,
 } as const
 
@@ -42,11 +50,11 @@ export const gradients = {
   heroOverlay: ['rgba(7,12,18,0.05)', 'rgba(7,12,18,0.35)', 'rgba(7,12,18,0.98)'],
   scrim: ['rgba(7,12,18,0)', 'rgba(7,12,18,0.85)'],
   // Кромки GlowCard: светятся в начале и растворяются к концу — «свет с одной стороны».
-  iceEdge: ['#3fd0c9', '#9fe8e4', 'rgba(63,208,201,0)'],
-  goldEdge: ['#e2b857', '#f2dfae', 'rgba(226,184,87,0)'],
+  iceEdge: ['#f2f5f8', '#cfd8e0', 'rgba(242,245,248,0)'],
+  goldEdge: ['#cfd8e0', '#8fa3b4', 'rgba(207,216,224,0)'],
 } as const
 
-// Мягкие тени под карточками + лёгкое бирюзовое свечение на активных элементах
+// Мягкие тени под карточками; свечения цветом больше нет — только глубина
 export const shadow = {
   card: {
     shadowColor: '#000000',
@@ -56,7 +64,7 @@ export const shadow = {
     elevation: 6,
   },
   glow: {
-    shadowColor: colors.turquoise,
+    shadowColor: '#000000',
     shadowOpacity: 0.4,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 0 },

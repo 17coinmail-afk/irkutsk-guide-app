@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
@@ -9,6 +9,7 @@ import { Press } from '../src/components/Press'
 import { GlowCard } from '../src/components/GlowCard'
 import { FadeInUp } from '../src/components/FadeInUp'
 import { PEOPLE } from '../src/content/people'
+import { emblemFor } from '../src/content/emblems'
 import { staggerDelay } from '../src/lib/motion'
 import { useReduceMotion } from '../src/hooks/useReduceMotion'
 import { colors, font, fontFamily, radius, space } from '../src/theme/tokens'
@@ -33,16 +34,28 @@ export default function PeopleScreen() {
         {PEOPLE.map((person, i) => {
           const isOpen = open === person.id
           const linked = placeTitle(person.placeSlug)
+          const emblem = emblemFor(person.id)
           return (
             <FadeInUp key={person.id} delay={staggerDelay(i, { reduceMotion })}>
               <GlowCard tone={isOpen ? 'gold' : 'ice'} contentStyle={s.card}>
                 <Press onPress={() => setOpen(isOpen ? null : person.id)} haptic="selection">
                   <View style={s.head}>
+                    {emblem ? (
+                      <Image
+                        source={emblem}
+                        style={[s.emblem, isOpen && s.emblemOpen]}
+                        resizeMode="contain"
+                        accessibilityIgnoresInvertColors
+                      />
+                    ) : null}
                     <View style={s.headCol}>
                       <Text style={s.name}>{person.name[lang]}</Text>
-                      <Text style={s.role}>{person.role[lang]}</Text>
+                      <Text style={s.role}>
+                        <Text style={s.years}>{person.years}</Text>
+                        {'  ·  '}
+                        {person.role[lang]}
+                      </Text>
                     </View>
-                    <Text style={s.years}>{person.years}</Text>
                   </View>
                 </Press>
 
@@ -77,7 +90,12 @@ const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   list: { padding: space.md, paddingBottom: 96, gap: space.smd },
   card: { gap: space.sm },
-  head: { flexDirection: 'row', alignItems: 'flex-start', gap: space.sm },
+  // Годы ушли в строку роли: имя получило всю ширину и перестало ломаться на две строки.
+  head: { flexDirection: 'row', alignItems: 'center', gap: space.smd },
+  // Свёрнутая карточка держит эмблему приглушённой, раскрытая — выводит её в полный тон:
+  // так список читается как ряд, а открытая запись — как разворот.
+  emblem: { width: 46, height: 46, opacity: 0.62 },
+  emblemOpen: { opacity: 1 },
   headCol: { flex: 1, gap: 2 },
   name: { color: colors.text, fontFamily: fontFamily.heading, fontSize: font.scale.h2 },
   role: { color: colors.textMuted, fontFamily: fontFamily.body, fontSize: font.scale.small },

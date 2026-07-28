@@ -3,7 +3,12 @@ import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { useFonts } from 'expo-font'
-import { PlayfairDisplay_400Regular, PlayfairDisplay_700Bold, PlayfairDisplay_800ExtraBold } from '@expo-google-fonts/playfair-display'
+import { PlayfairDisplay_700Bold } from '@expo-google-fonts/playfair-display'
+import {
+  CormorantGaramond_400Regular,
+  CormorantGaramond_600SemiBold,
+  CormorantGaramond_700Bold,
+} from '@expo-google-fonts/cormorant-garamond'
 import { Manrope_400Regular, Manrope_600SemiBold, Manrope_700Bold } from '@expo-google-fonts/manrope'
 import { ContentProvider } from '../src/content/ContentProvider'
 import { FavoritesProvider } from '../src/content/FavoritesProvider'
@@ -11,16 +16,17 @@ import { colors, fontFamily } from '../src/theme/tokens'
 
 export default function RootLayout() {
   const [fontsLoaded, fontsError] = useFonts({
-    [fontFamily.headingRegular]: PlayfairDisplay_400Regular,
-    [fontFamily.heading]: PlayfairDisplay_700Bold,
-    [fontFamily.headingBlack]: PlayfairDisplay_800ExtraBold,
+    [fontFamily.headingRegular]: CormorantGaramond_400Regular,
+    [fontFamily.heading]: CormorantGaramond_600SemiBold,
+    [fontFamily.headingBlack]: CormorantGaramond_700Bold,
+    [fontFamily.numeral]: PlayfairDisplay_700Bold,
     [fontFamily.body]: Manrope_400Regular,
     [fontFamily.bodyMedium]: Manrope_600SemiBold,
     [fontFamily.bodyBold]: Manrope_700Bold,
   })
 
   // Пока шрифты не готовы (и без ошибки) — держим пустой экран поверх системного сплэша,
-  // чтобы не мигнуть системным шрифтом перед Playfair/Manrope.
+  // чтобы не мигнуть системным шрифтом перед Cormorant/Manrope.
   if (!fontsLoaded && !fontsError) return null
 
   return (

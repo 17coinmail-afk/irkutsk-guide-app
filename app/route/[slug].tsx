@@ -142,7 +142,7 @@ const s = StyleSheet.create({
   timeline: { paddingHorizontal: space.md, paddingTop: space.sm },
   stopRow: { flexDirection: 'row', gap: space.sm },
   stopIndexCol: { width: 28, alignItems: 'center' },
-  idx: { color: colors.gold, fontFamily: fontFamily.heading, fontSize: font.scale.h2 },
+  idx: { color: colors.gold, fontFamily: fontFamily.numeral, fontSize: font.scale.h2 },
   stopLine: { flex: 1, width: 2, backgroundColor: colors.border, marginTop: 4, marginBottom: 4 },
   stopCard: { flex: 1, paddingBottom: space.md },
   stopPhoto: { width: '100%' },

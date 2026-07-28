@@ -18,10 +18,12 @@ export interface GlassPlan {
 
 const BLUR_ALPHA: Record<GlassDensity, number> = { thin: 0.16, regular: 0.28, dense: 0.42 }
 const SOLID_ALPHA: Record<GlassDensity, number> = { thin: 0.72, regular: 0.86, dense: 0.94 }
+// Палитра v4 монохромная: тон стекла различим по светлоте, а не по цвету.
+// Синева и охра ушли — от них весь интерфейс читался «цветным».
 const TINT: Record<GlassTone, [number, number, number]> = {
-  neutral: [10, 16, 24],
-  cold: [16, 34, 48],
-  warm: [38, 26, 18],
+  neutral: [9, 12, 16],
+  cold: [16, 21, 27],
+  warm: [26, 25, 24],
 }
 
 const INTENSITY: Record<GlassDensity, number> = { thin: 26, regular: 40, dense: 58 }

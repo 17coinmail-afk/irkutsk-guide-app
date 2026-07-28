@@ -18,8 +18,8 @@ describe('theme tokens', () => {
     expect(gradients.goldEdge[2]).toMatch(/rgba\(.*0\)$/)
   })
   it('типографическая шкала редизайна v3', () => {
-    expect(font.scale.hero).toBe(40)
-    expect(font.scale.h1).toBe(28)
+    expect(font.scale.hero).toBe(46)
+    expect(font.scale.h1).toBe(32)
     expect(font.scale.chip).toBe(11)
     const v = [font.scale.chip, font.scale.small, font.scale.body, font.scale.bodyLg, font.scale.h2, font.scale.h1, font.scale.hero]
     expect(v).toEqual([...v].sort((a, b) => a - b))

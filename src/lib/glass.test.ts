@@ -24,15 +24,18 @@ describe('glassPlan', () => {
         .toBeGreaterThan(alpha(glassPlan('ios', { density }).background))
     }
   })
-  it('тонировка меняет оттенок, но не превращается в цветной фильтр', () => {
-    const cold = glassPlan('ios', { tone: 'cold' }).background
-    const warm = glassPlan('ios', { tone: 'warm' }).background
-    expect(cold).not.toBe(warm)
-    // холодная тонировка синее по каналу B, тёплая — краснее по R
-    const [, , , coldB] = cold.match(/rgba\((\d+), (\d+), (\d+)/)!.map(Number)
-    const [, warmR] = warm.match(/rgba\((\d+)/)!.map(Number)
-    expect(coldB).toBeGreaterThan(30)
-    expect(warmR).toBeGreaterThan(30)
+  it('тона различимы, но остаются почти монохромными', () => {
+    const rgb = (bg: string) => bg.match(/rgba\((\d+), (\d+), (\d+)/)!.slice(1).map(Number)
+    const tones = (['neutral', 'cold', 'warm'] as const).map((tone) =>
+      rgb(glassPlan('ios', { tone }).background),
+    )
+    // ни один тон не уходит в цвет: разброс каналов внутри тона мал
+    for (const [r, g, b] of tones) {
+      expect(Math.max(r, g, b) - Math.min(r, g, b)).toBeLessThanOrEqual(12)
+    }
+    // но по светлоте тона всё же отличаются друг от друга
+    const lum = tones.map(([r, g, b]) => r + g + b)
+    expect(new Set(lum).size).toBe(3)
   })
   it('у материала всегда есть кромка света', () => {
     for (const os of ['ios', 'android'] as const) {

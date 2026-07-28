@@ -57,7 +57,7 @@ const s = StyleSheet.create({
     marginHorizontal: space.md, padding: space.md, gap: space.md,
   },
   item: { flexBasis: '45%', flexGrow: 1 },
-  value: { color: colors.gold, fontFamily: fontFamily.heading, fontSize: font.scale.h1 },
+  value: { color: colors.gold, fontFamily: fontFamily.numeral, fontSize: font.scale.h1 },
   unit: { color: colors.textMuted, fontFamily: fontFamily.bodyMedium, fontSize: font.scale.small },
   label: { color: colors.textMuted, fontFamily: fontFamily.body, fontSize: font.scale.small, marginTop: 2, textTransform: 'uppercase', letterSpacing: 0.5 },
 })
