@@ -1,5 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Animated, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
+import {
+  Animated, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions,
+  Image as RNImage,
+} from 'react-native'
 import { Image } from 'expo-image'
 import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
@@ -27,6 +30,10 @@ import { nearby, routesForBudget, arrivalRoutes, formatKm, type TimeBudget } fro
 import { formatDuration, formatWindow, isRunningOn, MODE_ICON } from '../../src/lib/transport'
 import * as Location from 'expo-location'
 import { useReduceMotion } from '../../src/hooks/useReduceMotion'
+import { EMBLEMS } from '../../src/content/emblems'
+
+/** Четыре эмблемы-превью для строки «Люди Иркутска»: корабль, фуражка, камера, рояль. */
+const PEOPLE_PREVIEW = ['shelikhov', 'kolchak', 'gaidai', 'matsuev'] as const
 import { placeChipLabel, categoryLabel, themeLabel } from '../../src/i18n/labels'
 import { colors, font, fontFamily, radius, space } from '../../src/theme/tokens'
 import OfflineFirstRun from '../offline-first-run'
@@ -137,7 +144,7 @@ export default function HomeTab() {
       <View style={s.todayWrap}><TodayBar /></View>
 
       {nearbyItems.length > 0 && (
-        <FadeInUp delay={40} style={s.section}>
+        <FadeInUp delay={40} style={s.sectionFirst}>
           <SectionHeader title={me ? t('arrNearby') : t('arrNearbyNoGeo')} />
           <View style={s.nearList}>
             {nearbyItems.map((item) => (
@@ -366,7 +373,19 @@ export default function HomeTab() {
       <FadeInUp delay={320} style={s.section}>
         <Press onPress={() => router.push('/people')} haptic="light">
           <Glass edge="top" density="thin" style={s.peopleRow}>
-            <Ionicons name="people-outline" size={20} color={colors.gold} />
+            {/* Вместо родовой иконки «человечки» — четыре эмблемы из самого раздела:
+                строка сразу показывает, что там внутри, и не повторяет иконки соседних блоков. */}
+            <View style={s.peopleMarks}>
+              {PEOPLE_PREVIEW.map((id) => (
+                <RNImage
+                  key={id}
+                  source={EMBLEMS[id]}
+                  style={s.peopleMark}
+                  resizeMode="contain"
+                  accessibilityIgnoresInvertColors
+                />
+              ))}
+            </View>
             <View style={s.nearCol}>
               <Text style={s.nearTitle}>{t('peopleTitle')}</Text>
               <Text style={s.nearMeta} numberOfLines={1}>{t('peopleSub')}</Text>
@@ -433,6 +452,9 @@ const s = StyleSheet.create({
   todayWrap: { marginTop: -space.lg, marginBottom: space.smd, zIndex: 2 },
   statWrap: { marginBottom: space.md, overflow: 'hidden' },
   section: { marginTop: space.xl },
+  // Первая секция идёт сразу за строкой погоды — полный межсекционный отступ
+  // оставлял под ней провал в пол-экрана.
+  sectionFirst: { marginTop: space.lg },
   nearList: { paddingHorizontal: space.md, gap: space.sm },
   nearRow: {
     flexDirection: 'row', alignItems: 'center', gap: space.smd, padding: space.sm,
@@ -455,6 +477,8 @@ const s = StyleSheet.create({
   budgetChipOn: { backgroundColor: 'rgba(255,255,255,0.90)', borderColor: 'transparent' },
   budgetTxt: { color: colors.textMuted, fontFamily: fontFamily.bodyMedium, fontSize: font.scale.small },
   budgetTxtOn: { color: colors.bg, fontFamily: fontFamily.bodyBold },
+  peopleMarks: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  peopleMark: { width: 24, height: 24, opacity: 0.6 },
   peopleRow: {
     flexDirection: 'row', alignItems: 'center', gap: space.smd,
     marginHorizontal: space.md, paddingHorizontal: space.md, paddingVertical: space.smd,

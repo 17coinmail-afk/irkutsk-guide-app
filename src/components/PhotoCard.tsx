@@ -81,7 +81,8 @@ const s = StyleSheet.create({
     backgroundColor: 'rgba(10,15,22,0.72)', borderRadius: radius.md,
     paddingHorizontal: space.sm, paddingVertical: 6, alignItems: 'center', minWidth: 52,
   },
-  badgeValue: { color: colors.gold, fontFamily: fontFamily.heading, fontSize: 18, lineHeight: 20 },
+  // Число дней — Playfair: у Cormorant минускульные цифры, и «1 день» читался как опечатка.
+  badgeValue: { color: colors.gold, fontFamily: fontFamily.numeral, fontSize: 18, lineHeight: 20 },
   badgeLabel: { color: colors.textMuted, fontFamily: fontFamily.body, fontSize: 10, textTransform: 'uppercase', letterSpacing: 0.5 },
   content: { position: 'absolute', left: 0, right: 0, bottom: 0, padding: space.md, gap: 2 },
   chip: { color: colors.turquoise, fontFamily: fontFamily.bodyBold, fontSize: font.scale.chip, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 2 },
