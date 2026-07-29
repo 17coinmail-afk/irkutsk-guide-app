@@ -19,7 +19,24 @@ export default function MapTab() {
   const { flat, flng } = useLocalSearchParams<{ flat?: string; flng?: string }>()
   const ref = useRef<WebView>(null)
   const [mapLoading, setMapLoading] = useState(true)
+  const [mapFailed, setMapFailed] = useState(false)
+  const [attempt, setAttempt] = useState(0)
   const { manifest, readyIds } = useOfflinePackages()
+
+  // Крутилка снималась только по событию готовности. Если оно не приходило —
+  // например, WebView не поднялся или тайлы недоступны, — экран крутился вечно,
+  // без объяснения и без выхода. Пятнадцать секунд, дальше честная ошибка и «Повторить».
+  useEffect(() => {
+    if (!mapLoading) return
+    const id = setTimeout(() => { setMapLoading(false); setMapFailed(true) }, 15000)
+    return () => clearTimeout(id)
+  }, [mapLoading, attempt])
+
+  const retryMap = useCallback(() => {
+    setMapFailed(false)
+    setMapLoading(true)
+    setAttempt((n) => n + 1)
+  }, [])
 
   const points: MapPoint[] = useMemo(() => (pack?.data.places ?? []).map((p) => ({
     lng: p.lng, lat: p.lat, slug: p.slug, title: p.translations[lang].title, city: p.section === 'city',
@@ -69,12 +86,14 @@ export default function MapTab() {
         />
       ) : (
       <WebView
+        key={attempt}
         ref={ref}
         originWhitelist={['*']}
         source={{ html }}
         style={s.map}
         onMessage={onMessage}
         onLoadEnd={() => setMapLoading(false)}
+        onError={() => { setMapLoading(false); setMapFailed(true) }}
         javaScriptEnabled
         domStorageEnabled
       />
@@ -83,6 +102,16 @@ export default function MapTab() {
         <View style={s.loader} pointerEvents="none">
           <ActivityIndicator color={colors.turquoise} size="large" />
           <Text style={s.loaderTxt}>{t('mapLoading')}</Text>
+        </View>
+      )}
+      {mapFailed && (
+        <View style={s.loader}>
+          <Ionicons name="cloud-offline-outline" size={34} color={colors.textDim} />
+          <Text style={s.failedTxt}>{t('mapFailed')}</Text>
+          <Pressable style={s.retryBtn} onPress={retryMap}>
+            <Ionicons name="refresh" size={16} color={colors.bg} />
+            <Text style={s.retryTxt}>{t('retry')}</Text>
+          </Pressable>
         </View>
       )}
       <Pressable style={s.locBtn} onPress={locate}>
@@ -97,6 +126,16 @@ const s = StyleSheet.create({
   map: { flex: 1, backgroundColor: colors.bg },
   loader: { ...StyleSheet.absoluteFill, backgroundColor: colors.bg, alignItems: 'center', justifyContent: 'center', gap: space.sm },
   loaderTxt: { color: colors.textMuted, fontFamily: fontFamily.body, fontSize: font.scale.body },
+  failedTxt: {
+    color: colors.textMuted, fontFamily: fontFamily.body, fontSize: font.scale.body,
+    textAlign: 'center', lineHeight: 22, paddingHorizontal: space.xl, marginBottom: space.sm,
+  },
+  retryBtn: {
+    flexDirection: 'row', alignItems: 'center', gap: space.sm,
+    backgroundColor: colors.turquoise, borderRadius: radius.pill,
+    paddingHorizontal: space.lg, paddingVertical: space.smd,
+  },
+  retryTxt: { color: colors.bg, fontFamily: fontFamily.bodyBold, fontSize: font.scale.body },
   locBtn: {
     position: 'absolute', right: space.md, bottom: space.lg, flexDirection: 'row', alignItems: 'center', gap: 6,
     backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: radius.pill,

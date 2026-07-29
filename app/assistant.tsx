@@ -1,10 +1,10 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useContent } from '../src/content/ContentProvider'
 import { ScreenHeader } from '../src/components/ScreenHeader'
-import { sendAssistant, type ChatMsg } from '../src/lib/assistantApi'
+import { probeAssistant, sendAssistant, type ChatMsg } from '../src/lib/assistantApi'
 import { colors, space, font, fontFamily, radius, shadow } from '../src/theme/tokens'
 
 interface Bubble { id: string; role: 'user' | 'assistant' | 'system'; text: string }
@@ -16,6 +16,21 @@ export default function Assistant() {
   const [busy, setBusy] = useState(false)
   const listRef = useRef<FlatList>(null)
   const [msgs, setMsgs] = useState<Bubble[]>([{ id: 'intro', role: 'system', text: t('assistantIntro') }])
+  // null — ещё проверяем. Пока неизвестно, ввод не даём: обещать ответ и не ответить хуже,
+  // чем сразу сказать, что помощник не работает.
+  const [available, setAvailable] = useState<boolean | null>(null)
+
+  useEffect(() => {
+    let alive = true
+    probeAssistant().then((ok) => {
+      if (!alive) return
+      setAvailable(ok)
+      if (!ok) {
+        setMsgs((m) => [...m, { id: 'unavail', role: 'system', text: t('assistantUnconfigured') }])
+      }
+    })
+    return () => { alive = false }
+  }, [t])
 
   const send = async () => {
     const text = input.trim()
@@ -62,15 +77,20 @@ export default function Assistant() {
         />
         <View style={[s.inputBar, { paddingBottom: insets.bottom + space.sm }]}>
           <TextInput
-            style={s.input}
+            style={[s.input, available === false && s.inputOff]}
             value={input}
             onChangeText={setInput}
-            placeholder={t('assistantPlaceholder')}
+            placeholder={available === null ? t('assistantChecking') : t('assistantPlaceholder')}
             placeholderTextColor={colors.textDim}
+            editable={available === true}
             multiline
             onSubmitEditing={send}
           />
-          <Pressable style={[s.sendBtn, (!input.trim() || busy) && s.sendDisabled]} onPress={send} disabled={!input.trim() || busy}>
+          <Pressable
+            style={[s.sendBtn, (!input.trim() || busy || available !== true) && s.sendDisabled]}
+            onPress={send}
+            disabled={!input.trim() || busy || available !== true}
+          >
             <Ionicons name="arrow-up" size={22} color={colors.bg} />
           </Pressable>
         </View>
@@ -88,6 +108,7 @@ const s = StyleSheet.create({
   theirs: { alignSelf: 'flex-start', backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderBottomLeftRadius: radius.sm },
   mineTxt: { color: colors.bg, fontFamily: fontFamily.bodyMedium, fontSize: font.scale.bodyLg, lineHeight: 22 },
   theirsTxt: { color: colors.text, fontFamily: fontFamily.body, fontSize: font.scale.bodyLg, lineHeight: 22 },
+  inputOff: { opacity: 0.5 },
   thinking: { flexDirection: 'row', alignItems: 'center', gap: space.sm, padding: space.md },
   thinkingTxt: { color: colors.textDim, fontFamily: fontFamily.body, fontSize: font.scale.small },
   inputBar: { flexDirection: 'row', alignItems: 'flex-end', gap: space.sm, paddingHorizontal: space.md, paddingTop: space.sm, backgroundColor: colors.surface, borderTopWidth: 1, borderTopColor: colors.border },

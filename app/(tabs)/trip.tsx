@@ -9,9 +9,10 @@ import { placesById, resolveRouteStops, routeCoverPhoto } from '../../src/lib/se
 import { dayWord } from '../../src/lib/dayWord'
 import { stopWord } from '../../src/lib/stopWord'
 import { PhotoCard } from '../../src/components/PhotoCard'
+import { Press } from '../../src/components/Press'
 import type { Place, Route } from '../../src/lib/contentTypes'
 import { placeChipLabel, themeLabel } from '../../src/i18n/labels'
-import { colors, space, font, fontFamily } from '../../src/theme/tokens'
+import { colors, space, font, fontFamily, radius } from '../../src/theme/tokens'
 
 type Row = { kind: 'place'; place: Place } | { kind: 'route'; route: Route }
 
@@ -30,9 +31,16 @@ export default function TripTab() {
   if (!places.length && !routes.length) {
     return (
       <SafeAreaView style={s.safe} edges={['top']}>
+        {/* Пустой экран объяснял, что делать, но не давал это сделать:
+            выход из тупика должен быть на самом экране, а не в памяти пользователя. */}
         <View style={s.empty}>
           <Ionicons name="heart-outline" size={40} color={colors.textDim} />
           <Text style={s.emptyTxt}>{t('tripEmpty')}</Text>
+          <Press onPress={() => router.push('/places')} haptic="light">
+            <View style={s.emptyBtn}>
+              <Text style={s.emptyBtnTxt}>{t('tripEmptyAction')}</Text>
+            </View>
+          </Press>
         </View>
       </SafeAreaView>
     )
@@ -81,5 +89,10 @@ const s = StyleSheet.create({
   list: { padding: space.md },
   cardWrap: { marginBottom: space.md },
   empty: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: space.lg, gap: space.md },
+  emptyBtn: {
+    backgroundColor: colors.turquoise, borderRadius: radius.pill,
+    paddingHorizontal: space.lg, paddingVertical: space.smd,
+  },
+  emptyBtnTxt: { color: colors.bg, fontFamily: fontFamily.bodyBold, fontSize: font.scale.body },
   emptyTxt: { color: colors.textMuted, fontFamily: fontFamily.body, fontSize: font.scale.bodyLg, textAlign: 'center', lineHeight: 24 },
 })

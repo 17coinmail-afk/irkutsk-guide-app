@@ -3,13 +3,24 @@ import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-nat
 import { Ionicons } from '@expo/vector-icons'
 import { useContent } from '../../src/content/ContentProvider'
 import { ScreenHeader } from '../../src/components/ScreenHeader'
-import { parseWeather, weatherCodeInfo, iceStatus, pick, type Weather } from '../../src/lib/weather'
+import { parseWeather, weatherCodeInfo, iceStatus, pick, type IceState, type Weather } from '../../src/lib/weather'
 import { colors, space, font, fontFamily, radius, shadow } from '../../src/theme/tokens'
 
 const URL =
   'https://api.open-meteo.com/v1/forecast?latitude=52.29&longitude=104.30' +
   '&current=temperature_2m,weather_code,wind_speed_10m' +
   '&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Asia/Irkutsk&forecast_days=5'
+
+/**
+ * Знак состояния льда. Раньше здесь стояла снежинка при любом состоянии, и над
+ * надписью «Открытая вода» висел снег — знак спорил с текстом.
+ */
+const ICE_ICON: Record<IceState, 'water-outline' | 'snow-outline' | 'thermometer-outline'> = {
+  open: 'water-outline',
+  forming: 'snow-outline',
+  solid: 'snow-outline',
+  melting: 'thermometer-outline',
+}
 
 const DAYS_RU = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
 const DAYS_EN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -89,7 +100,7 @@ export default function WeatherScreen() {
         <View style={[s.card, { borderColor: iceTint }]}>
           <Text style={s.cardLabel}>{t('iceHeader')}</Text>
           <View style={s.iceRow}>
-            <Ionicons name="snow-outline" size={28} color={iceTint} />
+            <Ionicons name={ICE_ICON[ice.state]} size={28} color={iceTint} />
             <Text style={[s.iceState, { color: iceTint }]}>{pick(ice.label, lang)}</Text>
           </View>
           <Text style={s.iceNote}>{pick(ice.note, lang)}</Text>

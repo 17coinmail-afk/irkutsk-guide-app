@@ -14,6 +14,7 @@ export type UiKey =
   | 'statLabelDepth' | 'statUnitDepth' | 'statLabelAge' | 'statUnitAge'
   | 'statLabelFresh' | 'statUnitFresh' | 'statLabelLength' | 'statUnitLength'
   | 'mapLoading' | 'routesCountLabel'
+  | 'tripEmptyAction' | 'mapFailed' | 'assistantChecking'
   | 'tabPractical' | 'practicalTitle' | 'practicalSubtitle'
   | 'modGetThere' | 'modGetThereSub' | 'modPhrasebook' | 'modPhrasebookSub'
   | 'modWeather' | 'modWeatherSub' | 'modEmergency' | 'modEmergencySub'
@@ -46,7 +47,7 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     aboutTitle: 'О приложении', aboutBody: 'Карманный гид по Иркутску и Байкалу: места, маршруты и карта на трёх языках. Фото: Pexels, Wikimedia. Вид на главной — Вячеслав Аргенберг, CC BY 4.0. Заведения: © OpenStreetMap.',
     language: 'Язык', cacheStatus: 'Данные',
     offlineTitle: 'Нужен интернет', offlineBody: 'Для первой загрузки гида подключитесь к интернету. Дальше приложение работает офлайн.', retry: 'Повторить',
-    tabTrip: 'Поездка', myLocation: 'Я', nearbyToggle: 'Рядом',
+    tabTrip: 'Поездка', myLocation: 'Где я', nearbyToggle: 'Рядом',
     tripPlacesTitle: 'Сохранённые места', tripRoutesTitle: 'Сохранённые маршруты',
     tripEmpty: 'Отмечайте места и маршруты сердечком — они появятся здесь.',
     homeEyebrow: 'Иркутск · Байкал', homeTitle: 'Гид по Иркутску и Байкалу',
@@ -63,6 +64,9 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     statLabelFresh: 'пресной воды планеты', statUnitFresh: '%',
     statLabelLength: 'длина озера', statUnitLength: 'км',
     mapLoading: 'Загрузка карты…', routesCountLabel: 'остановок',
+    tripEmptyAction: 'Открыть места',
+    mapFailed: 'Карта не загрузилась. Проверьте связь или скачайте её заранее.',
+    assistantChecking: 'Проверяем связь…',
     tabPractical: 'Практика', practicalTitle: 'Практика туриста',
     practicalSubtitle: 'Всё для поездки: транспорт, язык, погода и помощь.',
     modGetThere: 'Как добраться', modGetThereSub: 'Аэропорт, Листвянка, Ольхон, КБЖД',
@@ -72,7 +76,7 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     weatherHeader: 'Погода в Иркутске', forecastTitle: 'Прогноз на 5 дней',
     iceHeader: 'Лёд Байкала', approxNote: 'Данные ориентировочные',
     weatherError: 'Не удалось загрузить погоду. Проверьте интернет.',
-    pricesApprox: 'Цены и время ориентировочные', todayLabel: 'Сейчас',
+    pricesApprox: 'Цены и время ориентировочные', todayLabel: 'Сегодня',
     assistantTitle: 'AI-помощник', assistantSub: 'Спросите про поездку — бета',
     assistantIntro: 'Здравствуйте! Я помогу спланировать поездку в Иркутск и на Байкал. Спросите, что посмотреть, куда съездить или как добраться.',
     assistantPlaceholder: 'Спросите о поездке…', assistantSend: 'Отправить',
@@ -122,7 +126,7 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     aboutTitle: 'About', aboutBody: 'A pocket guide to Irkutsk and Lake Baikal: places, routes and a map in three languages. Photos: Pexels, Wikimedia. Home screen view by Vyacheslav Argenberg, CC BY 4.0. Venues: © OpenStreetMap.',
     language: 'Language', cacheStatus: 'Data',
     offlineTitle: 'Internet needed', offlineBody: 'Connect to the internet for the first load. After that the guide works offline.', retry: 'Retry',
-    tabTrip: 'Trip', myLocation: 'Me', nearbyToggle: 'Nearby',
+    tabTrip: 'Trip', myLocation: 'Where am I', nearbyToggle: 'Nearby',
     tripPlacesTitle: 'Saved places', tripRoutesTitle: 'Saved routes',
     tripEmpty: 'Tap the heart on places and routes — they appear here.',
     homeEyebrow: 'Irkutsk · Baikal', homeTitle: 'Guide to Irkutsk and Lake Baikal',
@@ -139,6 +143,9 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     statLabelFresh: 'of the world’s fresh water', statUnitFresh: '%',
     statLabelLength: 'lake length', statUnitLength: 'km',
     mapLoading: 'Loading the map…', routesCountLabel: 'stops',
+    tripEmptyAction: 'Browse places',
+    mapFailed: 'The map did not load. Check your connection or download it in advance.',
+    assistantChecking: 'Checking the connection…',
     tabPractical: 'Practical', practicalTitle: 'Practical info',
     practicalSubtitle: 'Everything for your trip: transport, language, weather and help.',
     modGetThere: 'Getting there', modGetThereSub: 'Airport, Listvyanka, Olkhon, Circum-Baikal',
@@ -148,7 +155,7 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     weatherHeader: 'Weather in Irkutsk', forecastTitle: '5-day forecast',
     iceHeader: 'Baikal ice', approxNote: 'Figures are approximate',
     weatherError: 'Could not load the weather. Check your connection.',
-    pricesApprox: 'Prices and times are approximate', todayLabel: 'Now',
+    pricesApprox: 'Prices and times are approximate', todayLabel: 'Today',
     assistantTitle: 'AI assistant', assistantSub: 'Ask about your trip — beta',
     assistantIntro: 'Hi! I can help you plan a trip to Irkutsk and Lake Baikal. Ask what to see, where to go or how to get there.',
     assistantPlaceholder: 'Ask about your trip…', assistantSend: 'Send',
@@ -198,7 +205,7 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     aboutTitle: '关于', aboutBody: '伊尔库茨克与贝加尔湖随身向导：三语的景点、路线与地图。照片：Pexels、Wikimedia。首页图片：Vyacheslav Argenberg，CC BY 4.0。场所：© OpenStreetMap。',
     language: '语言', cacheStatus: '数据',
     offlineTitle: '需要联网', offlineBody: '首次加载请连接网络，之后向导可离线使用。', retry: '重试',
-    tabTrip: '行程', myLocation: '我', nearbyToggle: '附近',
+    tabTrip: '行程', myLocation: '我的位置', nearbyToggle: '附近',
     tripPlacesTitle: '已存景点', tripRoutesTitle: '已存路线',
     tripEmpty: '点击景点和路线上的爱心，它们会显示在这里。',
     homeEyebrow: '伊尔库茨克 · 贝加尔湖', homeTitle: '伊尔库茨克与贝加尔湖指南',
@@ -215,6 +222,9 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     statLabelFresh: '全球淡水占比', statUnitFresh: '%',
     statLabelLength: '湖泊长度', statUnitLength: '公里',
     mapLoading: '地图加载中…', routesCountLabel: '站',
+    tripEmptyAction: '浏览景点',
+    mapFailed: '地图未能加载。请检查网络，或提前下载离线地图。',
+    assistantChecking: '正在检查连接…',
     tabPractical: '实用', practicalTitle: '实用信息',
     practicalSubtitle: '旅行所需一切：交通、语言、天气与求助。',
     modGetThere: '如何前往', modGetThereSub: '机场、利斯特维扬卡、奥尔洪、环湖铁路',

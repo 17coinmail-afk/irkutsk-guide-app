@@ -32,6 +32,8 @@ export interface OfflinePackagesApi {
   local: Record<string, LocalPackage>
   progress: Record<string, number>
   error: string | null
+  /** Повторная загрузка манифеста: при сбое сети экрану нужна кнопка, а не совет уйти и вернуться. */
+  reload: () => void
   stateOf: (meta: PackageMeta) => PackageState
   readyIds: Set<string>
   download: (meta: PackageMeta) => Promise<void>
@@ -47,6 +49,13 @@ export function useOfflinePackages(): OfflinePackagesApi {
   const [local, setLocal] = useState<Record<string, LocalPackage>>({})
   const [progress, setProgress] = useState<Record<string, number>>({})
   const [error, setError] = useState<string | null>(null)
+  const [attempt, setAttempt] = useState(0)
+
+  const reload = useCallback(() => {
+    setError(null)
+    setManifest(null)
+    setAttempt((n) => n + 1)
+  }, [])
 
   useEffect(() => {
     let alive = true
@@ -61,7 +70,7 @@ export function useOfflinePackages(): OfflinePackagesApi {
       }
     })()
     return () => { alive = false }
-  }, [])
+  }, [attempt])
 
   const download = useCallback(async (meta: PackageMeta) => {
     setError(null)
@@ -122,5 +131,5 @@ export function useOfflinePackages(): OfflinePackagesApi {
       .map((l) => l.id),
   )
 
-  return { manifest, local, progress, error, stateOf, readyIds, download, remove }
+  return { manifest, local, progress, error, reload, stateOf, readyIds, download, remove }
 }

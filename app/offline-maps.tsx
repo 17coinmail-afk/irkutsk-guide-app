@@ -11,14 +11,26 @@ import { colors, font, fontFamily, radius, space } from '../src/theme/tokens'
 
 export default function OfflineMapsScreen() {
   const { lang, t } = useContent()
-  const { manifest, local, progress, error, stateOf, download, remove } = useOfflinePackages()
+  const { manifest, local, progress, error, reload, stateOf, download, remove } = useOfflinePackages()
 
   return (
     <SafeAreaView style={s.safe} edges={['top']}>
       <ScreenHeader title={t('offlineMapsTitle')} subtitle={t('offlineMapsSub')} />
       <ScrollView contentContainerStyle={s.list} showsVerticalScrollIndicator={false}>
         {!manifest && !error && <Text style={s.muted}>{t('mapLoading')}</Text>}
-        {error === 'manifest' && <Text style={s.muted}>{t('offlineMapsNoNet')}</Text>}
+        {/* Сбой сети — тупик без выхода: раньше здесь была только надпись,
+            и повторить попытку можно было, лишь уйдя с экрана и вернувшись. */}
+        {error === 'manifest' && (
+          <View style={s.errorBox}>
+            <Text style={s.muted}>{t('offlineMapsNoNet')}</Text>
+            <Press onPress={reload} haptic="light">
+              <View style={s.retryBtn}>
+                <Ionicons name="refresh" size={16} color={colors.bg} />
+                <Text style={s.retryTxt}>{t('retry')}</Text>
+              </View>
+            </Press>
+          </View>
+        )}
 
         {manifest?.packages.map((p) => {
           const state = stateOf(p)
@@ -104,6 +116,13 @@ const s = StyleSheet.create({
   secondaryTxt: { color: colors.text, fontFamily: fontFamily.bodyMedium, fontSize: font.scale.body },
   err: { color: colors.danger, fontFamily: fontFamily.body, fontSize: font.scale.small },
   muted: { color: colors.textMuted, fontFamily: fontFamily.body, textAlign: 'center', marginTop: space.lg },
+  errorBox: { alignItems: 'center', gap: space.md },
+  retryBtn: {
+    flexDirection: 'row', alignItems: 'center', gap: space.sm,
+    backgroundColor: colors.turquoise, borderRadius: radius.pill,
+    paddingHorizontal: space.lg, paddingVertical: space.smd,
+  },
+  retryTxt: { color: colors.bg, fontFamily: fontFamily.bodyBold, fontSize: font.scale.body },
   note: { color: colors.textDim, fontFamily: fontFamily.body, fontSize: font.scale.small, lineHeight: 19, marginTop: space.sm },
   attr: { color: colors.textDim, fontFamily: fontFamily.body, fontSize: font.scale.small },
 })
