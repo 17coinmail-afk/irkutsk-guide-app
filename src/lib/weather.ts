@@ -22,7 +22,8 @@ export interface Weather {
 export function weatherCodeInfo(code: number): { icon: string; label: Tri } {
   const g = (icon: string, ru: string, en: string, zh: string) => ({ icon, label: { ru, en, zh } })
   if (code === 0) return g('sunny-outline', 'Ясно', 'Clear', '晴')
-  if (code === 1 || code === 2) return g('partly-sunny-outline', 'Переменная облачность', 'Partly cloudy', '多云')
+  // «Переменная облачность» не помещалась в строку «сегодня» и обрывалась многоточием.
+  if (code === 1 || code === 2) return g('partly-sunny-outline', 'Переменно', 'Partly cloudy', '多云')
   if (code === 3) return g('cloudy-outline', 'Пасмурно', 'Overcast', '阴')
   if (code === 45 || code === 48) return g('cloud-outline', 'Туман', 'Fog', '雾')
   if (code >= 51 && code <= 57) return g('rainy-outline', 'Морось', 'Drizzle', '毛毛雨')

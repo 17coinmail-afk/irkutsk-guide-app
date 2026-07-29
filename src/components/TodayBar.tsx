@@ -54,7 +54,7 @@ export function TodayBar() {
           <Text style={s.label} numberOfLines={1}>{pick(info.label, lang)}</Text>
         </View>
         <View style={s.divider} />
-        <View style={s.cell}>
+        <View style={[s.cell, s.cellFixed]}>
           <View style={[s.dot, { backgroundColor: iceTint }]} />
           <Text style={s.label} numberOfLines={1}>{pick(ice.label, lang)}</Text>
         </View>
@@ -73,6 +73,9 @@ const s = StyleSheet.create({
     borderRadius: radius.pill, borderWidth: StyleSheet.hairlineWidth, borderColor: colors.borderSoft,
   },
   cell: { flexDirection: 'row', alignItems: 'center', gap: space.xs, flexShrink: 1 },
+  // Состояние льда не сжимается: обе ячейки тянули ширину друг у друга, и «Открытая вода»
+  // обрывалась на «Открытая в…». Погода уступает — её подпись длиннее и терпит усечение.
+  cellFixed: { flexShrink: 0 },
   temp: { color: colors.text, fontFamily: fontFamily.heading, fontSize: font.scale.bodyLg },
   label: { color: colors.textMuted, fontFamily: fontFamily.body, fontSize: font.scale.small, flexShrink: 1 },
   divider: { width: StyleSheet.hairlineWidth, height: 18, backgroundColor: colors.border },

@@ -31,10 +31,20 @@ import { formatDuration, formatWindow, isRunningOn, MODE_ICON } from '../../src/
 import * as Location from 'expo-location'
 import { useReduceMotion } from '../../src/hooks/useReduceMotion'
 import { EMBLEMS } from '../../src/content/emblems'
+import { baikalSeason, formatHeroDate, heroPhoto, type Season } from '../../src/lib/homeHero'
+import type { UiKey as UiKeyType } from '../../src/i18n/strings'
+
+/** Сезон → ключ подписи. Отдельной таблицей, чтобы не собирать ключ склейкой строк. */
+const SEASON_KEY: Record<Season, UiKeyType> = {
+  winter: 'seasonWinter',
+  spring: 'seasonSpring',
+  summer: 'seasonSummer',
+  autumn: 'seasonAutumn',
+}
 
 /** Четыре эмблемы-превью для строки «Люди Иркутска»: корабль, фуражка, камера, рояль. */
 const PEOPLE_PREVIEW = ['shelikhov', 'kolchak', 'gaidai', 'matsuev'] as const
-import { placeChipLabel, categoryLabel, themeLabel } from '../../src/i18n/labels'
+import { placeChipLabel, themeLabel } from '../../src/i18n/labels'
 import { colors, font, fontFamily, radius, space } from '../../src/theme/tokens'
 import OfflineFirstRun from '../offline-first-run'
 
@@ -55,7 +65,9 @@ export default function HomeTab() {
   const router = useRouter()
   const reduceMotion = useReduceMotion()
   const { height: screenHeight, width: screenWidth } = useWindowDimensions()
-  const heroHeight = Math.round(screenHeight * 0.55)
+  // Шапка стала ниже: она больше не карточка места, а строка «где вы» — держать под неё
+  // больше половины экрана значит отодвигать «Начните отсюда» за пределы первого взгляда.
+  const heroHeight = Math.round(screenHeight * 0.46)
   const seasonCardWidth = (screenWidth - space.md * 2 - space.sm) / 2
 
   const [heroLoaded, setHeroLoaded] = useState(false)
@@ -78,6 +90,9 @@ export default function HomeTab() {
   const scrollY = useRef(new Animated.Value(0)).current
 
   const sections = useMemo(() => homeSections(pack), [pack])
+  const heroImage = useMemo(() => heroPhoto(pack?.data.places ?? []), [pack])
+  // Дата берётся один раз за монтирование: пересчитывать её на каждый кадр прокрутки незачем.
+  const today = useMemo(() => new Date(), [])
   const nearbyItems = useMemo(() => nearby(pack?.data.places ?? [], me), [pack, me])
   const budgetRoutes = useMemo(() => routesForBudget(pack?.data.routes ?? [], budget), [pack, budget])
   const arrivals = useMemo(() => arrivalRoutes(pack?.data.transport ?? [], new Date()), [pack])
@@ -113,32 +128,30 @@ export default function HomeTab() {
     >
       <View style={[s.hero, { height: heroHeight }]}>
         {!heroLoaded && <Skeleton style={StyleSheet.absoluteFill} radius={0} />}
-        {sections.hero?.photoUrl ? (
+        {heroImage ? (
           <KenBurns
-            source={sections.hero.photoUrl}
+            source={heroImage}
             extraTransform={reduceMotion ? undefined : [{ translateY: heroTranslateY }, { scale: heroScale } as never]}
             onLoad={() => setHeroLoaded(true)}
           />
         ) : null}
         <GradientOverlay variant="hero" />
-        {/* Герой — конкретное место, а не слоган: издательская обложка вместо рекламной шапки. */}
-        <Press
-          onPress={() => sections.hero && router.push(`/place/${sections.hero.slug}`)}
-          haptic="light"
-          style={s.heroPress}
-        >
+        {/*
+          Шапка, а не карточка места: раньше здесь стояло первое место каталога, и
+          приложение открывалось экраном «ПРИРОДА · Озеро Байкал» — будто вы уже нажали
+          на достопримечательность. Открывают его при этом в Иркутске, до озера ещё ехать.
+          Поэтому шапка отвечает на три вопроса: где вы, какой сегодня день, далеко ли Байкал.
+          Нажатия нет намеренно — всё действие ниже, в «Начните отсюда».
+        */}
+        <View style={s.heroPress} pointerEvents="none">
           <Glass edge="top" density="regular" style={s.heroGlass}>
-            <Text style={s.eyebrow}>{t('homeEyebrow')}</Text>
-            <Text style={s.heroTitle} numberOfLines={2}>
-              {sections.hero ? sections.hero.translations[lang].title : t('homeTitle')}
+            <Text style={s.eyebrow}>
+              {formatHeroDate(today, lang)} · {t(SEASON_KEY[baikalSeason(today.getMonth() + 1)])}
             </Text>
-            <Text style={s.heroMeta} numberOfLines={1}>
-              {sections.hero
-                ? categoryLabel(sections.hero.category, lang).toUpperCase()
-                : t('homeSubtitle')}
-            </Text>
+            <Text style={s.heroTitle} numberOfLines={1}>{t('homeHeroCity')}</Text>
+            <Text style={s.heroMeta} numberOfLines={2}>{t('homeHeroMeta')}</Text>
           </Glass>
-        </Press>
+        </View>
       </View>
 
       <View style={s.todayWrap}><TodayBar /></View>

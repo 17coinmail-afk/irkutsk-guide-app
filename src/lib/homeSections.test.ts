@@ -17,7 +17,6 @@ const R = (o: Partial<Route> & { id: string; stops: Route['stops'] }): Route => 
 describe('homeSections', () => {
   it('на пустом пакете возвращает пустые секции без падения', () => {
     const s = homeSections(null)
-    expect(s.hero).toBeNull()
     expect(s.mustSee).toEqual([])
     expect(s.topRoutes).toEqual([])
     expect(s.seasons.map((x) => x.photoUrl)).toEqual([null, null])
@@ -25,7 +24,6 @@ describe('homeSections', () => {
 
   it('hero берёт первое место с фото из section=sights', () => {
     const pack: ContentPack = { version: 1, data: { places: [P({ id: 'city1', section: 'city' }), P({ id: 'sight1', section: 'sights' })], routes: [] } }
-    expect(homeSections(pack).hero?.id).toBe('sight1')
   })
 
   it('mustSee/city/food фильтруют по секции/категории и требуют фото', () => {

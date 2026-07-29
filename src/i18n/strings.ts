@@ -8,6 +8,7 @@ export type UiKey =
   | 'offlineTitle' | 'offlineBody' | 'retry'
   | 'tabTrip' | 'myLocation' | 'nearbyToggle' | 'tripPlacesTitle' | 'tripRoutesTitle' | 'tripEmpty'
   | 'homeEyebrow' | 'homeTitle' | 'homeSubtitle'
+  | 'homeHeroCity' | 'homeHeroMeta' | 'seasonSpring' | 'seasonAutumn'
   | 'secMustSee' | 'secTopRoutes' | 'secSeasons' | 'secCityHome' | 'secFood' | 'secTrip'
   | 'seasonWinter' | 'seasonWinterCaption' | 'seasonSummer' | 'seasonSummerCaption'
   | 'statLabelDepth' | 'statUnitDepth' | 'statLabelAge' | 'statUnitAge'
@@ -42,7 +43,7 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     tabHome: 'Главное', tabPlaces: 'Места', tabRoutes: 'Маршруты', tabMap: 'Карта', tabMore: 'Ещё',
     filterAll: 'Всё', secBaikal: 'Байкал', secCity: 'Город',
     searchPlaces: 'Поиск мест', noResults: 'Ничего не найдено', hoursNote: 'часы уточняйте', openInMaps: 'Открыть в картах', callBtn: 'Позвонить', siteBtn: 'Сайт', showOnMap: 'На карте',
-    aboutTitle: 'О приложении', aboutBody: 'Карманный гид по Иркутску и Байкалу: места, маршруты и карта на трёх языках. Фото: Pexels, Wikimedia. Заведения: © OpenStreetMap.',
+    aboutTitle: 'О приложении', aboutBody: 'Карманный гид по Иркутску и Байкалу: места, маршруты и карта на трёх языках. Фото: Pexels, Wikimedia. Вид на главной — Вячеслав Аргенберг, CC BY 4.0. Заведения: © OpenStreetMap.',
     language: 'Язык', cacheStatus: 'Данные',
     offlineTitle: 'Нужен интернет', offlineBody: 'Для первой загрузки гида подключитесь к интернету. Дальше приложение работает офлайн.', retry: 'Повторить',
     tabTrip: 'Поездка', myLocation: 'Я', nearbyToggle: 'Рядом',
@@ -50,6 +51,9 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     tripEmpty: 'Отмечайте места и маршруты сердечком — они появятся здесь.',
     homeEyebrow: 'Иркутск · Байкал', homeTitle: 'Гид по Иркутску и Байкалу',
     homeSubtitle: 'Места, маршруты и карта — с собой, даже без интернета.',
+    homeHeroCity: 'Иркутск',
+    homeHeroMeta: 'Город на Ангаре · до Байкала 70 км',
+    seasonSpring: 'Весна', seasonAutumn: 'Осень',
     secMustSee: 'Обязательно увидеть', secTopRoutes: 'Готовые маршруты', secSeasons: 'Когда ехать',
     secCityHome: 'Город Иркутск', secFood: 'Где поесть', secTrip: 'Моя поездка',
     seasonWinter: 'Зима', seasonWinterCaption: 'Февраль–март · лёд Байкала',
@@ -115,7 +119,7 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     tabHome: 'Home', tabPlaces: 'Places', tabRoutes: 'Routes', tabMap: 'Map', tabMore: 'More',
     filterAll: 'All', secBaikal: 'Baikal', secCity: 'City',
     searchPlaces: 'Search places', noResults: 'Nothing found', hoursNote: 'hours may vary', openInMaps: 'Open in maps', callBtn: 'Call', siteBtn: 'Website', showOnMap: 'On map',
-    aboutTitle: 'About', aboutBody: 'A pocket guide to Irkutsk and Lake Baikal: places, routes and a map in three languages. Photos: Pexels, Wikimedia. Venues: © OpenStreetMap.',
+    aboutTitle: 'About', aboutBody: 'A pocket guide to Irkutsk and Lake Baikal: places, routes and a map in three languages. Photos: Pexels, Wikimedia. Home screen view by Vyacheslav Argenberg, CC BY 4.0. Venues: © OpenStreetMap.',
     language: 'Language', cacheStatus: 'Data',
     offlineTitle: 'Internet needed', offlineBody: 'Connect to the internet for the first load. After that the guide works offline.', retry: 'Retry',
     tabTrip: 'Trip', myLocation: 'Me', nearbyToggle: 'Nearby',
@@ -123,6 +127,9 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     tripEmpty: 'Tap the heart on places and routes — they appear here.',
     homeEyebrow: 'Irkutsk · Baikal', homeTitle: 'Guide to Irkutsk and Lake Baikal',
     homeSubtitle: 'Places, routes and a map — with you, even offline.',
+    homeHeroCity: 'Irkutsk',
+    homeHeroMeta: 'A city on the Angara · Baikal is 70 km away',
+    seasonSpring: 'Spring', seasonAutumn: 'Autumn',
     secMustSee: 'Must see', secTopRoutes: 'Ready-made routes', secSeasons: 'When to go',
     secCityHome: 'Irkutsk city', secFood: 'Where to eat', secTrip: 'My trip',
     seasonWinter: 'Winter', seasonWinterCaption: 'February–March · Baikal ice',
@@ -188,7 +195,7 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     tabHome: '主页', tabPlaces: '景点', tabRoutes: '路线', tabMap: '地图', tabMore: '更多',
     filterAll: '全部', secBaikal: '贝加尔湖', secCity: '城市',
     searchPlaces: '搜索景点', noResults: '未找到结果', hoursNote: '营业时间请再确认', openInMaps: '在地图中打开', callBtn: '拨打电话', siteBtn: '网站', showOnMap: '在地图上',
-    aboutTitle: '关于', aboutBody: '伊尔库茨克与贝加尔湖随身向导：三语的景点、路线与地图。照片：Pexels、Wikimedia。场所：© OpenStreetMap。',
+    aboutTitle: '关于', aboutBody: '伊尔库茨克与贝加尔湖随身向导：三语的景点、路线与地图。照片：Pexels、Wikimedia。首页图片：Vyacheslav Argenberg，CC BY 4.0。场所：© OpenStreetMap。',
     language: '语言', cacheStatus: '数据',
     offlineTitle: '需要联网', offlineBody: '首次加载请连接网络，之后向导可离线使用。', retry: '重试',
     tabTrip: '行程', myLocation: '我', nearbyToggle: '附近',
@@ -196,6 +203,9 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     tripEmpty: '点击景点和路线上的爱心，它们会显示在这里。',
     homeEyebrow: '伊尔库茨克 · 贝加尔湖', homeTitle: '伊尔库茨克与贝加尔湖指南',
     homeSubtitle: '景点、路线和地图，离线也能使用。',
+    homeHeroCity: '伊尔库茨克',
+    homeHeroMeta: '安加拉河畔的城市 · 距贝加尔湖70公里',
+    seasonSpring: '春季', seasonAutumn: '秋季',
     secMustSee: '必看景点', secTopRoutes: '精选路线', secSeasons: '何时出发',
     secCityHome: '伊尔库茨克市', secFood: '美食推荐', secTrip: '我的行程',
     seasonWinter: '冬季', seasonWinterCaption: '2月–3月 · 贝加尔湖冰面',

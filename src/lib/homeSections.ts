@@ -12,7 +12,6 @@ export interface SeasonSectionData {
 }
 
 export interface HomeSections {
-  hero: Place | null
   mustSee: Place[]
   topRoutes: Route[]
   seasons: SeasonSectionData[]
@@ -36,7 +35,6 @@ export function homeSections(pack: ContentPack | null): HomeSections {
   const sights = withPhoto(places.filter((p) => p.section === 'sights'))
   const city = withPhoto(places.filter((p) => p.section === 'city' && p.category !== 'food'))
   const food = withPhoto(places.filter((p) => p.category === 'food'))
-  const hero = sights[0] ?? withPhoto(places)[0] ?? null
 
   const topRoutes = [...routes]
     .sort((a, b) => {
@@ -61,7 +59,6 @@ export function homeSections(pack: ContentPack | null): HomeSections {
   ]
 
   return {
-    hero,
     mustSee: sights.slice(0, 10),
     topRoutes,
     seasons,
