@@ -10,6 +10,7 @@ import { GlowCard } from '../src/components/GlowCard'
 import { FadeInUp } from '../src/components/FadeInUp'
 import { PEOPLE } from '../src/content/people'
 import { emblemFor } from '../src/content/emblems'
+import { PersonGallery } from '../src/components/PersonGallery'
 import { staggerDelay } from '../src/lib/motion'
 import { useReduceMotion } from '../src/hooks/useReduceMotion'
 import { colors, font, fontFamily, radius, space } from '../src/theme/tokens'
@@ -62,6 +63,9 @@ export default function PeopleScreen() {
                   {isOpen && (
                     <>
                       <Text style={s.text}>{person.text[lang]}</Text>
+                      {person.photos?.length ? (
+                        <PersonGallery photos={person.photos} lang={lang} />
+                      ) : null}
                       {linked && person.placeSlug ? (
                         <Press
                           onPress={() => router.push(`/place/${person.placeSlug}`)}

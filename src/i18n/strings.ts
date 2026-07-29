@@ -109,7 +109,7 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     arrTime: 'Сколько у вас времени?', arrTime1: '1 день', arrTime3: '2–3 дня', arrTime7: 'Неделя',
     arrHowTo: 'Как добраться', arrAllRoutes: 'Все маршруты', arrEnableGeo: 'Показать рядом со мной',
     peopleTitle: 'Люди Иркутска', peopleSub: 'Кто здесь родился, жил и оставил след',
-    peopleNote: 'Нажмите на имя, чтобы прочитать историю. Из карточки можно перейти к месту, связанному с человеком.',
+    peopleNote: 'Нажмите на имя, чтобы прочитать историю и посмотреть фотографии. Снимки листаются вбок; нажатие на снимок открывает источник.',
   },
   en: {
     tabHome: 'Home', tabPlaces: 'Places', tabRoutes: 'Routes', tabMap: 'Map', tabMore: 'More',
@@ -182,7 +182,7 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     arrTime: 'How much time do you have?', arrTime1: '1 day', arrTime3: '2–3 days', arrTime7: 'A week',
     arrHowTo: 'Getting around', arrAllRoutes: 'All routes', arrEnableGeo: 'Show what is near me',
     peopleTitle: 'People of Irkutsk', peopleSub: 'Who was born here, lived here and left a mark',
-    peopleNote: 'Tap a name to read the story. From a card you can jump to the place connected with the person.',
+    peopleNote: 'Tap a name to read the story and see the photographs. Swipe the photos sideways; tap one to open its source.',
   },
   zh: {
     tabHome: '主页', tabPlaces: '景点', tabRoutes: '路线', tabMap: '地图', tabMore: '更多',
@@ -255,6 +255,6 @@ export const UI: Record<Lang, Record<UiKey, string>> = {
     arrTime: '您有多少时间？', arrTime1: '1 天', arrTime3: '2–3 天', arrTime7: '一周',
     arrHowTo: '如何出行', arrAllRoutes: '全部路线', arrEnableGeo: '显示我附近的地点',
     peopleTitle: '伊尔库茨克的人物', peopleSub: '在此出生、生活并留下印记的人',
-    peopleNote: '点击姓名即可阅读故事。可从卡片跳转到与此人相关的地点。',
+    peopleNote: '点击姓名即可阅读故事并查看照片。照片可左右滑动，点击照片可打开来源。',
   },
 }

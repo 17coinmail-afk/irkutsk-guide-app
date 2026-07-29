@@ -37,4 +37,37 @@ describe('люди Иркутска', () => {
     const linked = PEOPLE.filter((p) => p.placeSlug).length
     expect(linked).toBeGreaterThanOrEqual(Math.ceil(PEOPLE.length * 0.8))
   })
+
+  it('у каждого пять фото, и все они с подписью на трёх языках', () => {
+    for (const p of PEOPLE) {
+      expect(p.photos?.length, p.id).toBe(5)
+      for (const ph of p.photos ?? []) {
+        expect(ph.file, ph.file).toMatch(new RegExp(`^${p.id}-\\d\\.jpg$`))
+        for (const lang of ['ru', 'en', 'zh'] as const) {
+          // Порог зависит от языка: «演奏中» — это полноценная подпись из трёх знаков,
+          // а три буквы кириллицей или латиницей означали бы обрубок.
+          const min = lang === 'zh' ? 2 : 4
+          expect(ph.caption[lang].length, `${ph.file}.${lang}`).toBeGreaterThanOrEqual(min)
+        }
+      }
+    }
+  })
+
+  it('у каждого фото есть автор, лицензия и ссылка на источник', () => {
+    // CC BY и CC BY-SA требуют указания автора и ссылки на работу: без этого
+    // публиковать снимок нельзя, поэтому проверяем не «желательно», а строго.
+    for (const p of PEOPLE) {
+      for (const ph of p.photos ?? []) {
+        expect(ph.credit, ph.file).toMatch(/ · .+$/)
+        expect(ph.source, ph.file).toMatch(/^https:\/\/commons\.wikimedia\.org\/wiki\/File:/)
+      }
+    }
+  })
+
+  it('внутри одной галереи снимки не повторяются', () => {
+    for (const p of PEOPLE) {
+      const sources = (p.photos ?? []).map((ph) => ph.source)
+      expect(new Set(sources).size, p.id).toBe(sources.length)
+    }
+  })
 })
